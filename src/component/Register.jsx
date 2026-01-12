@@ -19,7 +19,8 @@ const Register = ({ onRegistered }) => {
        const [showPassword, setShowPassword] = useState(false)
        const router = useRouter()
        const session = useSession();
-       
+       console.log(session?.data);
+
        const {
               register,
               handleSubmit,

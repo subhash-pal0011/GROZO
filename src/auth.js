@@ -101,30 +101,48 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               //👉 Login ke time token banta hai, aur session token se hi data leke banta hai. 👉 Isse performance better hoti hai aur authorization fast ho jata hai.
 
 
-              //           token, user IN DONO KHI SE AYE NHI HII EK TRIKE SE PERAMITER SMJH LO.
+              //    token, user IN DONO KHI SE AYE NHI HII EK TRIKE SE PERAMITER SMJH LO.
               async jwt({ token, user }) {
+                     await dbConnect();
+
+                     // Login ke time user aata hai
                      if (user) {
                             // tum direct ese bhi kr skte ho >> user.name = user.name is trike se.
-                            token.role = user.role;  // Role token me isliye daalte hain taaki app har baar DB se na poochhe, seedha token dekh ke decision le le. admin hii ya user hii
+                            token.role = user.role; // Role token me isliye daalte hain taaki app har baar DB se na poochhe, seedha token dekh ke decision le le. admin hii ya user hii.
+
+                            token.email = user.email;
                      }
+
+                     // 🔥 HAR REQUEST pe DB check
+                     const dbUser = await User.findOne({ email: token.email });
+
+                     // ❌ USER DB ME NAHI HAI → TOKEN INVALID
+                     if (!dbUser) {
+                            return null;
+                     }
+
+                     token.role = dbUser.role;
+                     token.id = dbUser._id.toString();
+
                      return token;
               },
 
-
               // 👉 Session frontend ke use ke liye hota hai. UI decide karti hai ki user logged in hai ya nahi, aur uska role kya hai.
-
               async session({ session, token }) {
-                     if (session.user) {
-                            // tum direct ese bhi kr skte ho >> session.user.name = token.name is trike se.
-                            session.user.role = token.role; // humne ise direct role ke hisb se set kr diya.
+
+                     if (!token) {
+                            return null;
                      }
+
+                     session.user.id = token.id;
+                     // tum direct ese bhi kr skte ho >> session.user.name = token.name is trike se.
+                     session.user.role = token.role; // humne ise direct role ke hisb se set kr diya.
+
                      return session;
               },
        },
-
        pages: {
               signIn: "/login",
        },
-
        secret: process.env.AUTH_SECRET,
 });

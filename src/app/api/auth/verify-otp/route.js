@@ -45,7 +45,7 @@ export async function POST(req) {
                      );
               }
 
-              existUser.isVerified = true;
+              existUser.isVerify = true;
               existUser.otp = null;
               existUser.otpExpires = null;
 
