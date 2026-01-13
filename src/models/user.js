@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema(
                      trim: true,
               },
 
+              mobileVerified: {
+                     type: Boolean,
+                     default: false,
+              },
+
               role: {
                      type: String,
                      enum: ["user", "admin", "delivery"],
