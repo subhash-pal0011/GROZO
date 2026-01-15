@@ -1,7 +1,10 @@
 import { auth } from "@/auth";
+import AdminDashboard from "@/component/AdminDashboard";
+import DeliveryBoyDashboard from "@/component/DeliveryBoyDashboard";
 import Nav from "@/component/Nav";
 import PhoneNumRole from "@/component/PhoneNumRole";
 import PhoneNumVerify from "@/component/PhoneNumVerify";
+import UserDashboard from "@/component/UserDashboard";
 import dbConnect from "@/connectDb/dbConnect";
 import User from "@/models/user";
 import { redirect } from "next/navigation";
@@ -25,9 +28,19 @@ const Home = async () => {
     return <PhoneNumVerify mobile={user.mobile} />;
   }
 
+  // isko is error se bachne ke liye bana pada<... user={{$__: ..., $isNew: false, _doc: ...}}>
+  const plainUser = JSON.parse(JSON.stringify(user))
+
   // STEP 3 PE YE CHALEGA
   return (
-    <Nav />
+    <>
+      <Nav user={plainUser} />
+      {user?.role === "user" ? (
+        <UserDashboard />
+      ) : user?.role === "admin" ? (
+        <AdminDashboard />
+      ) : <DeliveryBoyDashboard />}
+    </>
   );
 };
 
