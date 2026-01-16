@@ -34,12 +34,11 @@ const Login = () => {
                             email,
                             password
                      })
-              } catch (error) {
+              } 
+              catch (error) {
                      console.log(`login error : ${error}`)
               }
-              console.log(data)
-       };
-
+       }
 
        return (
               <div className="w-full h-screen items-center text-center justify-center flex flex-col">
@@ -135,7 +134,7 @@ const Login = () => {
                             </div>
 
                             <div className="flex items-center justify-center mx-auto gap-1 text-center">
-                                   <p className="text-sm">Don’t have an account?</p>
+                                   <p className="md:text-sm text-xs">Don’t have an account?</p>
                                    <FiLogIn />
                                    <button
                                           type="button"

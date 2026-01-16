@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "./auth"
 
 export async function proxy(request) {
+
        const session = await auth() //USE-SESSION() KYU NHI LIKHA GYA HII NA NEXTJS KE 16-V5 MEA AUTH A GYA HII IS LIYE
 
        const pathname = request.nextUrl.pathname
@@ -19,6 +20,21 @@ export async function proxy(request) {
        if (!isPublicPath && !session) {
               return NextResponse.redirect(new URL("/register", request.url))
        }
+
+       const role = session?.user?.role
+       console.log(`role : ${role}`)
+       if(pathname.startsWith("/user") && role !=="user"){
+              return NextResponse.redirect(new URL("/unAuthroize" , req.url))
+       }
+       if(pathname.startsWith("/admin") && role !== "admin"){
+              return NextResponse.redirect(new URL("/unAuthroize" , req.url))
+       }
+       if(pathname.startsWith("/delivery") && role !=="delivery"){
+              return NextResponse.redirect(new URL("/unAuthroize" , req.url))
+       }
+
+
+
 
        return NextResponse.next()
 }

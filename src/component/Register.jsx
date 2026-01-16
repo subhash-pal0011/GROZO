@@ -65,7 +65,7 @@ const Register = ({ onRegistered }) => {
                                    delay: 0.3, duration: 0.8
                             }}
 
-                            className="w-full md:max-w-1/2 space-y-5 p-2">
+                            className="w-full md:max-w-1/2 space-y-5 p-2 ">
                             <div className="space-y-1.5">
                                    <h2 className="text-green-500 text-2xl font-semibold">
                                           Create Account
@@ -177,7 +177,7 @@ const Register = ({ onRegistered }) => {
                                    </button>
                             </div>
                             <div className="flex items-center text-center justify-center mx-auto gap-1">
-                                   <p className="text-sm">Already have an account ?</p>
+                                   <p className="md:text-sm text-xs">Already have an account ?</p>
                                    <FiLogIn />
                                    <button onClick={() => router.push("/login")}
                                           className="text-green-500 font-semibold cursor-pointer">Login</button>

@@ -82,7 +82,6 @@ const PhoneNumRole = () => {
       >
         {roles.map((role) => {
           const isSelected = selectedRole === role.id;
-
           return (
             <motion.div
               key={role.id}
@@ -141,9 +140,7 @@ const PhoneNumRole = () => {
             e.target.value = e.target.value.replace(/[^0-9]/g, "");
           }}
         />
-        {errors.mobile && (
-          <p className="text-red-500 text-xs">{errors.mobile.message}</p>
-        )}
+        
 
         <button
           disabled={isSubmitting}

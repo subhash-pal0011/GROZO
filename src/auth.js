@@ -68,7 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
        callbacks: {
               async signIn({ user, profile, account }) {
-                     // AGR ACCOUNYT PROVIDER KI VALUE GOOGLE HOGI TBHI SIGNIN GOOGLE SE KRYENGE.
+                     // 🧠AGR ACCOUNYT PROVIDER KI VALUE GOOGLE HOGI TBHI SIGNIN GOOGLE SE KRYENGE.
                      if (account?.provider === "google") {
                             await dbConnect();
 
@@ -85,14 +85,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                                           profilePic: profile.picture, //Google provider me picture hi hota hai.
                                           role: "user",
                                           isVerify: true,
-                                          provider: "google",//ISKA NAME JIS BITTON MEA SIGNIN KRA RHE HOGE VHI LIKHA JAYEGA.
+                                          provider: "google",//🧠ISKA NAME JIS BITTON MEA SIGNIN KRA RHE HOGE VHI LIKHA JAYEGA.
                                    });
                             }
 
-                            // user ka role jb set krenge to db se a jyega.
+                            //🧠 user ka role jb set krenge to db se a jyega. NHI TO BAD MEA SESSION SE UPDATE KRNA PDEGA
                             user.role = dbUser.role;
                      }
-                     return true; //“signIn callback me return true/false decide karta hai ki login allow hoga ya reject. Last me true lagana ek default behavior hai sab providers ke liye, jo explicitly reject nahi hue.”
+                     return true; // 🧠 “signIn callback me return true/false decide karta hai ki login allow hoga ya reject. Last me true lagana ek default behavior hai sab providers ke liye, jo explicitly reject nahi hue.”
               },
 
               // 👉 Token (JWT) backend side pe hota hai, secure aur signed hota hai. Isme user ki identity aur role jaise data store karte hain taaki har request pe DB call na karna pade.

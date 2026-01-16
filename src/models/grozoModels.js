@@ -33,8 +33,11 @@ const grozoSchema = new mongoose.Schema({
               required:true
        },
        unit:{
-              type:String, // kg, liter, piece
-              required:true
+              type:String, 
+              required:true,
+              enum:[
+                     "kg" , "g" , "liter" , "ml" , "piece" , "pack"
+              ]
        },
        image:{
               type:String,
