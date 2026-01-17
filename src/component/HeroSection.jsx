@@ -52,7 +52,7 @@ const HeroSection = () => {
 
        return (
               <div
-                     className="w-full h-[80vh] relative overflow-hidden"
+                     className="w-full h-[90vh] relative overflow-hidden"
                      onMouseEnter={() => setIsHovered(true)}
                      onMouseLeave={() => setIsHovered(false)}
               >

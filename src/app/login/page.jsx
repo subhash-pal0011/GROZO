@@ -7,8 +7,6 @@ import { FaRegEye } from "react-icons/fa";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
-import axios from "axios";
-import { toast } from "sonner"
 import { ClipLoader } from "react-spinners";
 import { FiLogIn } from "react-icons/fi";
 import { signIn } from "next-auth/react";
@@ -22,7 +20,6 @@ const Login = () => {
               register,
               handleSubmit,
               watch,
-              reset,
               formState: { errors, isSubmitting },
        } = useForm();
 
@@ -30,18 +27,19 @@ const Login = () => {
 
        const onSubmit = async (data) => {
               try {
-                     await signIn("credentials",{
+                     await signIn("credentials", {
                             email,
                             password
                      })
-              } 
+              }
               catch (error) {
                      console.log(`login error : ${error}`)
               }
        }
 
        return (
-              <div className="w-full h-screen items-center text-center justify-center flex flex-col">
+              <div
+                     className="w-full h-screen items-center text-center justify-center flex flex-col">
                      <div className="absolute -top-1  md:left-3 -left-5 flex items-center gap-1 mb-6 cursor-pointer text-gray-300 p-10">
                             <IoMdArrowBack onClick={() => router.push("/")}
                                    size={25} className="hover:text-green-500 hover:scale-125 transition-all duration-300" />
@@ -127,8 +125,8 @@ const Login = () => {
                             </div>
 
                             <div className="items-center text-center justify-center flex">
-                                   <button  onClick={() => signIn("google", { callbackUrl: "/" })}
-                                   className="flex items-center gap-2 border p-2 px-5 rounded cursor-pointer">
+                                   <button onClick={() => signIn("google", { callbackUrl: "/" })}
+                                          className="flex items-center gap-2 border p-2 px-5 rounded cursor-pointer">
                                           <FcGoogle /> <p className="font-semibold text-sm">continew with google</p>
                                    </button>
                             </div>

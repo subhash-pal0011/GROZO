@@ -34,7 +34,7 @@ const Home = async () => {
   // STEP 3 PE YE CHALEGA
   return (
     <>
-      <Nav user={plainUser} />
+      <Nav user={plainUser}/>
       {user?.role === "user" ? (
         <UserDashboard />
       ) : user?.role === "admin" ? (

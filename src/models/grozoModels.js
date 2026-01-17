@@ -24,7 +24,8 @@ const grozoSchema = new mongoose.Schema({
                      "organic",
                      "household",
                      "personal_care",
-                     "baby_care"
+                     "baby_care",
+                     "electric"
               ],
               required: true
        },
@@ -45,5 +46,5 @@ const grozoSchema = new mongoose.Schema({
        }
 },{timestamps:true})
 
-const Grozo = mongoose.model.Grozo || mongoose.model("Grozo" , grozoSchema)
+const Grozo = mongoose.models.Grozo || mongoose.model("Grozo", grozoSchema)
 export default Grozo
