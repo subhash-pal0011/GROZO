@@ -2,6 +2,7 @@ import Provider from "@/Provider";
 import "./globals.css";
 import { Toaster } from "sonner";
 import StoreProvider from "@/redux/StoreProvider";
+import AppInit from "@/AppInit";
 
 export const metadata = {
   title: "GROZO | 10M + Delivery App",
@@ -20,7 +21,11 @@ export default function RootLayout({ children }) {
 
           <StoreProvider> {/* 🧠YAHA REDUX KO REP KIYE  */}
 
-            {children}
+            <AppInit>
+
+              {children}
+              
+            </AppInit>
 
           </StoreProvider>
 

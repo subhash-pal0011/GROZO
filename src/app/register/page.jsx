@@ -16,7 +16,6 @@ const Page = () => {
         <Register
         // 🔍           (data) IS DATA ME USER KA EMAIL HII JO HUM REGISTER SE BHEJ RHE HII ISME .   
           onRegistered={(data) => {
-            console.log("REGISTER DATA:", data); //  DEBUG
             setUserData(data);
             setStep(3);
           }}

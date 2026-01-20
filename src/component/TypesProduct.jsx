@@ -83,7 +83,7 @@ const TypesProduct = () => {
               checkScroll()
               return () => {
                      clearInterval(time);
-                     scrollRef.current.removeEventListener("scroll", checkScroll) // remove bhi krna rhta hii is liye.
+                     scrollRef.current?.removeEventListener("scroll", checkScroll) // remove bhi krna rhta hii is liye.
               }
        }, [])
 

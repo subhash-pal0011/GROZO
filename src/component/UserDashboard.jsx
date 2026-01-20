@@ -1,9 +1,9 @@
 import React from 'react'
 import HeroSection from './HeroSection'
 import TypesProduct from './TypesProduct'
-import ItemCard from './ItemCard'
 import dbConnect from '@/connectDb/dbConnect'
 import Grozo from '@/models/grozoModels'
+import ItemCart from './ItemCart'
 
 const UserDashboard = async () => {
   await dbConnect()
@@ -17,8 +17,8 @@ const UserDashboard = async () => {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 px-4 p-5">
-        {plainData.map((item, index) => (
-          <ItemCard key={item._id} data={item} />
+        {plainData.map((item) => (
+          <ItemCart key={item._id} data={item} />
         ))}
       </div>
     </div>

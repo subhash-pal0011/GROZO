@@ -10,11 +10,14 @@ import { FaStreetView } from "react-icons/fa6";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { createPortal } from "react-dom";
 import { FaBars } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const Nav = ({ user }) => {
        const [open, setOpen] = useState(false)
 
        const [menuOpen, setMenuOpen] = useState()
+
+       const{cartData} = useSelector((state)=>state.card)
 
        const sideBar = menuOpen
               ? createPortal(
@@ -58,7 +61,7 @@ const Nav = ({ user }) => {
                                                         />
                                                  )}
                                                  <span className="p-0 m-0">
-                                                        <p className="text-xs font-semibold m-0 leading-tight">
+                                                        <p className="text-xs font-semibold m-0 leading-tight capitalize line-clamp-1">
                                                                {user?.name}
                                                         </p>
                                                         <p className="text-xs m-0 leading-tight">
@@ -126,7 +129,7 @@ const Nav = ({ user }) => {
 
                                    <div className={`flex md:gap-7 ${user?.role === "admin" ? "gap-7" : "gap-2"}`}>
                                           {user?.role === "user" &&
-                                                 <Link href="/cart" className="flex items-center gap-1 relative">
+                                                 <Link href="/user/cart" className="flex items-center gap-1 relative">
                                                         <Image
                                                                src="/trolleyBag.gif"
                                                                alt="cart"
@@ -135,7 +138,7 @@ const Nav = ({ user }) => {
                                                                className="border border-orange-300 rounded-full p-1"
                                                         />
                                                         <span className="absolute -top-1 -right-1 md:bg-orange-400  md:text-white text-red-500 font-bold text-xs md:h-5 md:w-5 flex items-center justify-center rounded-full">
-                                                               0
+                                                              {cartData?.length || 0}
                                                         </span>
                                                  </Link>
                                           }

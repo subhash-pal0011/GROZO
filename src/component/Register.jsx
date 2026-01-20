@@ -12,14 +12,12 @@ import { toast } from "sonner"
 import { ClipLoader } from "react-spinners";
 import { FiLogIn } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { signIn, useSession } from "next-auth/react";
+import { signIn} from "next-auth/react";
 
 
 const Register = ({ onRegistered }) => {
        const [showPassword, setShowPassword] = useState(false)
        const router = useRouter()
-       const session = useSession();
-       console.log(session?.data);
 
        const {
               register,

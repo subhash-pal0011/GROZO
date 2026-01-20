@@ -76,7 +76,7 @@ const MainPage = ({setStep}) => {
                             transition={{
                                    delay: 1, duration: 1
                             }}
-                            className="max-w-[510px] text-sm font-semibold text-gray-300"
+                            className="max-w-127.5 text-sm font-semibold text-gray-300"
                      >
                             Grozo is built to redefine grocery shopping by combining technology, efficiency, and trusted local sourcing to deliver freshness and convenience at scale.
                      </motion.div>
