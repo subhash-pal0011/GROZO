@@ -12,7 +12,6 @@ import { addCartData, calculateTotal, removeCartData } from "@/redux/cartSlice";
 const Page = () => {
        const router = useRouter();
        const { cartData, totalPrice, deliveryCharge, platformCharge, grandTotal, discount } = useSelector((state) => state.card);
-       console.log(`discount : ${discount}`)
 
        const dispatch = useDispatch()
 
