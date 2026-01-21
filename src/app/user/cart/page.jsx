@@ -199,6 +199,12 @@ const Page = () => {
                                                         </span>
                                                  </motion.div>
                                           )}
+
+                                          <div onClick={() => router.push("/user/checkout")}
+                                                 className=" flex items-center justify-center cursor-pointer shadow-md  shadow-gray-600 hover:shadow-none transition-all duration-300">
+                                                 <span className="text-green-500 font-semibold">Next</span>
+                                                 <img src="/next.gif" alt="icon" className="h-10" />
+                                          </div>
                                    </motion.div>
                             </div>
                      )}
