@@ -14,8 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
 
       <body className=" min-h-screen w-full bg-linear-to-br from-[#0B0F0E] via-[#111827] to-[#020617] text-white">
-
-
+        
         {/* 🧠 HIM DIRECT YAHA PR HI SESSION KO USE KR SKTE HII BUT SESSION KE LIYE USE-CLIENT USE KRNA PADEGA TO  ISE HUM CLIENT COMPONENT NHI BANA SKTE KYUKI METADATA JO UPR HII YE KEVL SERVERCOMPONENT PE KAM KRTA HII */}
         <Provider>
 
@@ -37,3 +36,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
