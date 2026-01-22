@@ -75,7 +75,7 @@ const Page = () => {
                                           {cartData.map((item) => (
                                                  <motion.div
                                                         initial={{
-                                                               y: 60, opacity: 1
+                                                               y: 60, opacity: 0
                                                         }}
                                                         animate={{
                                                                y: 0, opacity: 1
@@ -135,7 +135,7 @@ const Page = () => {
                                    {/* RIGHT : SUMMARY */}
                                    <motion.div
                                           initial={{
-                                                 y: -60, opacity: 1
+                                                 y: -60, opacity: 0
                                           }}
                                           animate={{
                                                  y: 0, opacity: 1
