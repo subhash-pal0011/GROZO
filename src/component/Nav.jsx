@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineLogout } from "react-icons/ai";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaStreetView } from "react-icons/fa6";
@@ -11,13 +11,53 @@ import { MdOutlineManageAccounts } from "react-icons/md";
 import { createPortal } from "react-dom";
 import { FaBars } from "react-icons/fa6";
 import { useSelector } from "react-redux";
+import { FaAnglesDown } from "react-icons/fa6";
+import axios from "axios";
+import { toast } from "sonner";
 
 const Nav = ({ user }) => {
        const [open, setOpen] = useState(false)
 
        const [menuOpen, setMenuOpen] = useState()
 
-       const{cartData} = useSelector((state)=>state.card)
+       const [locationOpen, setLocationOpen] = useState(false)
+
+       const { cartData } = useSelector((state) => state.card)
+
+       const [addresses, setAddresses] = useState([]);
+
+
+       useEffect(() => {
+              if (!user?._id) return;
+              const fetchAddress = async () => {
+                     try {
+                            const res = await axios.get(
+                                   `/api/user/getAddress?userId=${user._id}`
+                            );
+                            if (res.data.success) {
+                                   setAddresses(res.data.data);
+                            }
+                     } catch (err) {
+                            console.log("address fetch error", err);
+                     }
+              };
+              fetchAddress();
+       }, [user]);
+
+
+       const handleDeleteAddress = async (addressId) => {
+              try {
+                     const res = await axios.delete(`/api/user/delteAddress?addressId=${addressId}`)
+
+                     if (res.data.success) {
+                            toast.success("Address deleted")
+                     }
+                     setAddresses((prev) => prev.filter((data) => data._id !== addressId))
+              } catch (error) {
+                     console.log(err);
+                     toast.error("Failed to delete address");
+              }
+       }
 
        const sideBar = menuOpen
               ? createPortal(
@@ -110,6 +150,62 @@ const Nav = ({ user }) => {
                             <div className="h-16 flex items-center justify-between">
                                    <Image src="/grozo.png" alt="logo" height={150} width={140} loading="eager" priority />
 
+
+                                   <div className="relative">
+                                          <button onClick={() => setLocationOpen(prev => !prev)}
+                                                 className="flex items-center cursor-pointer">
+                                                 <img src="/location-2.gif" className="h-8" />
+                                                 <FaAnglesDown className="cursor-pointer" size={20} />
+                                          </button>
+                                          <AnimatePresence>
+                                                 {locationOpen &&
+                                                        <motion.div
+                                                               initial={{
+                                                                      y: 10, opacity: 0, scale: 0.5
+                                                               }}
+                                                               animate={{
+                                                                      x: 0, opacity: 1, scale: 1
+                                                               }}
+                                                               exit={{
+                                                                      opacity: 0, y: -10, scale: 0.95
+                                                               }}
+                                                               transition={{
+                                                                      duration: 0.3
+                                                               }}
+                                                               className="absolute top-full md:-right-50 -right-10 mt-2 text-gray-800 bg-gray-100 md:w-90 w-60 p-3 rounded-md shadow-lg z-30">
+                                                               {addresses.length === 0 ? (
+                                                                      <p className="text-sm text-gray-500">No saved address</p>
+                                                               ) : (
+                                                                      addresses.map((addr) => (
+                                                                             <div
+                                                                                    key={addr._id}
+                                                                                    className="border-b pb-2 mb-2 cursor-pointer hover:bg-gray-200 p-1 rounded"
+                                                                             >
+                                                                                    <div className="flex gap-2">
+                                                                                           <p className="text-xs font-semibold capitalize">
+                                                                                                  {addr.label || "Address"}
+                                                                                           </p>
+                                                                                           <button onClick={()=>handleDeleteAddress(addr._id)}>
+                                                                                                  <img src="/delete-1.gif" alt="icon" className="w-4 h-4" />
+                                                                                           </button>
+                                                                                    </div>
+
+                                                                                    <p className="text-xs text-gray-600 line-clamp-2">
+                                                                                           {addr.fullAddress}
+                                                                                    </p>
+
+                                                                                    <p className="text-[11px] text-gray-500">
+                                                                                           {addr.city} - {addr.pinCode}
+                                                                                    </p>
+                                                                             </div>
+                                                                      ))
+
+                                                               )}
+                                                        </motion.div>
+                                                 }
+                                          </AnimatePresence>
+                                   </div>
+
                                    {user?.role === "user" &&
                                           <div className="hidden md:block relative w-full max-w-md">
                                                  <input
@@ -138,7 +234,7 @@ const Nav = ({ user }) => {
                                                                className="border border-orange-300 rounded-full p-1"
                                                         />
                                                         <span className="absolute -top-1 -right-1 md:bg-orange-400  md:text-white text-red-500 font-bold text-xs md:h-5 md:w-5 flex items-center justify-center rounded-full">
-                                                              {cartData?.length || 0}
+                                                               {cartData?.length || 0}
                                                         </span>
                                                  </Link>
                                           }
@@ -195,7 +291,7 @@ const Nav = ({ user }) => {
                                           {/* YE MOTION KA ANIMATION DENE KE LIYE YE TB USE HOTA JB KOI BUTOON CLIK KRNE PR CARD DIKHE TO USE OPEN AUR EXIST KRTE SMYE YE ANIMATION KRTA HII */}
                                           <div className="relative items-center">
                                                  <button onClick={() => setOpen(prev => !prev)}>
-                                                        <Image src={user?.profilePic || "/avatar.gif"} alt="img" height={35} width={35} className="rounded-full cursor-pointer"/>
+                                                        <Image src={user?.profilePic || "/avatar.gif"} alt="img" height={35} width={35} className="rounded-full cursor-pointer" />
                                                  </button>
                                                  <AnimatePresence>
                                                         {open && (
