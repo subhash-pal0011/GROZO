@@ -60,7 +60,6 @@ const cartSlice = createSlice({
 
        },
 });
-
 export const { addCartData, removeCartData, calculateTotal } = cartSlice.actions;
 export default cartSlice.reducer;
 

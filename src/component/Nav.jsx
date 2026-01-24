@@ -10,13 +10,16 @@ import { FaStreetView } from "react-icons/fa6";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { createPortal } from "react-dom";
 import { FaBars } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaAnglesDown } from "react-icons/fa6";
 import axios from "axios";
 import { toast } from "sonner";
+import { setSelectedAddress } from "@/redux/addressSlice";
+import { useRouter } from "next/navigation";
 
 const Nav = ({ user }) => {
        const [open, setOpen] = useState(false)
+       const router = useRouter()
 
        const [menuOpen, setMenuOpen] = useState()
 
@@ -25,6 +28,8 @@ const Nav = ({ user }) => {
        const { cartData } = useSelector((state) => state.card)
 
        const [addresses, setAddresses] = useState([]);
+
+       const dispatch = useDispatch()
 
 
        useEffect(() => {
@@ -179,13 +184,15 @@ const Nav = ({ user }) => {
                                                                       addresses.map((addr) => (
                                                                              <div
                                                                                     key={addr._id}
+                                                                                    onClick={() => dispatch(setSelectedAddress(addr))}
                                                                                     className="border-b pb-2 mb-2 cursor-pointer hover:bg-gray-200 p-1 rounded"
                                                                              >
-                                                                                    <div className="flex gap-2">
+                                                                                    <div
+                                                                                           className="flex gap-2">
                                                                                            <p className="text-xs font-semibold capitalize">
                                                                                                   {addr.label || "Address"}
                                                                                            </p>
-                                                                                           <button onClick={()=>handleDeleteAddress(addr._id)}>
+                                                                                           <button onClick={() => handleDeleteAddress(addr._id)}>
                                                                                                   <img src="/delete-1.gif" alt="icon" className="w-4 h-4" />
                                                                                            </button>
                                                                                     </div>
@@ -329,10 +336,11 @@ const Nav = ({ user }) => {
                                                                       </div>
 
                                                                       {user?.role === "user" &&
-                                                                             <div className="flex items-center gap-2 hover:bg-green-100 cursor-pointer p-1">
+                                                                             <button onClick={()=>router.push("/user/myOrder")}
+                                                                              className="flex items-center gap-2 hover:bg-green-100 cursor-pointer p-1">
                                                                                     <Image src="/order.gif" alt="icon" height={30} width={30} />
                                                                                     <p className="text-sm font-semibold leading-tight text-gray-600">My Order</p>
-                                                                             </div>
+                                                                             </button>
                                                                       }
 
                                                                       <div onClick={() => {
@@ -374,4 +382,7 @@ const Nav = ({ user }) => {
        );
 };
 export default Nav;
+
+
+
 
