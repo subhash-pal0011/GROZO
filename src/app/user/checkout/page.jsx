@@ -23,8 +23,69 @@ const Page = () => {
        const [searchText, setSearchText] = useState("");
        const [loadingSearch, setLoadingSearch] = useState(false);
        const [selectedLabel, setSelectedLabel] = useState("home");
-
        const { userData } = useSelector((state) => state.user);
+
+
+
+
+       //2-CONTAINER
+       const [selectPaymentMethod, setSelectPaymentMethod] = useState("online")
+       const { grandTotal, cartData } = useSelector((state) => state.card);
+       const { selectedAddress } = useSelector((state) => state.address);
+
+
+       const handlePlaceOrder = async () => {
+              if (!userData?._id) {
+                     toast.error("Please login first");
+                     return;
+              }
+
+              if (!cartData) {
+                     toast.error("Cart is empty");
+                     return;
+              }
+
+              if (!selectedAddress) {
+                     toast.error("Address not selected");
+                     router.push("/")
+                     return;
+              }
+
+              try {
+                     if (selectPaymentMethod === "cod") {
+                            const res = await axios.post("/api/user/placeOrderCod", {
+                                   user: userData?._id,
+                                   items: cartData,
+                                   paymentMethod: "cod",
+                                   address: selectedAddress?._id,
+                                   totalAmount: grandTotal,
+                            });
+
+                            if (res.data.success) {
+                                   console.log(res)
+                                   toast.success("Order placed successfully(COD)");
+                                   router.push("/user/payment-success");
+                            }
+                     }
+
+                     if (selectPaymentMethod === "online") {
+                            const res = await axios.post("/api/user/placeOrderOnline", {
+                                   user: userData?._id,
+                                   items: cartData,
+                                   paymentMethod: "online",
+                                   address: selectedAddress?._id,
+                                   totalAmount: grandTotal,
+                            })
+                            if (res.data.success) {
+                                   window.location.href = res.data.url;  // 🧠 “Online payment me backend Stripe checkout session create karta hai aur ek secure URL return karta hai. Browser ka control frontend ke paas hota hai, isliye frontend window.location.href se user ko Stripe checkout page par redirect karta hai.”
+                            }
+                     }
+              } catch (err) {
+                     console.log(err.response?.data || err);
+                     toast.error("Order failed");
+              }
+       };
+
 
        const {
               register,
@@ -79,7 +140,7 @@ const Page = () => {
                             reset({
                                    // 🧠 display_name iS LIYE KYUKI JB RES KO PRINT KROGE USI MEA DATA HII .
                                    address: res.data.display_name || "",
-                                   city:   res.data.address.county || "", // 🧠 JB RES KO PRINT KROGE TO PATA CHAL JYEGA KYU LIKHA GYA HII address.county
+                                   city: res.data.address.county || "", // 🧠 JB RES KO PRINT KROGE TO PATA CHAL JYEGA KYU LIKHA GYA HII address.county
                                    pinCode: res.data.address.postcode || "",
                             });
 
@@ -159,7 +220,7 @@ const Page = () => {
 
        return (
               <div className="w-full min-h-screen  bg-gray-50 text-gray-700 relative flex flex-col items-center">
-                     
+
                      <motion.div
                             initial={{ x: 100, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
@@ -403,6 +464,7 @@ const Page = () => {
 
                             </motion.div>
 
+
                             {/* RIGHT CONTAINER*/}
                             <motion.div
                                    initial={{
@@ -414,12 +476,47 @@ const Page = () => {
                                    transition={{
                                           duration: 0.5, ease: "easeOut"
                                    }}
-                                   className="md:w-[40%] w-full bg-linear-to-r from-green-50 rounded p-4 shadow-md">
+                                   className="md:w-[40%] w-full bg-linear-to-r from-green-50 rounded p-4 shadow-md space-y-5">
                                    <h3 className="font-bold text-xl text-center items-center justify-center flex gap-2"><SiContactlesspayment size={40} className="text-blue-500" /> Select Payment Method</h3>
 
-                                   <p className="text-sm text-gray-600 mt-2">
-                                          Cart summary yahan aayega🙂
-                                   </p>
+                                   <div className="space-y-5">
+
+                                          {/* ONLINE PAYMENT */}
+                                          <button
+                                                 onClick={() => setSelectPaymentMethod("online")}
+                                                 className={`flex items-center gap-2 border w-full p-2 cursor-pointer rounded ${selectPaymentMethod === "online" ? "border-green-500" : "border-gray-300"}`}
+                                          >
+                                                 💳
+                                                 <p className="text-xs font-semibold">Pay Online (Stripe)</p>
+                                          </button>
+
+
+                                          {/* COD */}
+                                          <button
+                                                 onClick={() => setSelectPaymentMethod("cod")}
+                                                 className={`flex items-center gap-2 border w-full p-2.5 cursor-pointer rounded ${selectPaymentMethod === "cod" ? "border-green-500" : "border-gray-300"}`}
+                                          >
+                                                 <img src="/cash.gif" alt="icon" className="h-5 w-5" />
+                                                 <span className="text-xs font-semibold">Cash on Delivery</span>
+                                          </button>
+                                          <hr />
+                                          <div className="flex justify-between">
+                                                 <p className="font-semibold">Total</p>
+                                                 <p>₹ {grandTotal}</p>
+                                          </div>
+
+
+                                          <button onClick={handlePlaceOrder}
+                                                 className="flex items-center justify-center border w-full cursor-pointer rounded p-1 shadow hover:shadow-none transition-all duration-300 shadow-blue-100"
+                                          >
+                                                 <span className="flex items-center gap-1">
+                                                        <p className="text-sm font-semibold">Place Order</p>
+                                                        <img src="/next.gif" alt="icon" className="h-8 w-8 mt-1" />
+                                                 </span>
+                                          </button>
+
+
+                                   </div>
                             </motion.div>
                      </div>
 
@@ -431,23 +528,3 @@ const Page = () => {
 };
 
 export default Page;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

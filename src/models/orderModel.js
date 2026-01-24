@@ -28,7 +28,7 @@ const orderSchema = new mongoose.Schema(
                             quantity: {
                                    type: Number,
                                    required: true,
-                                   min: 1, max : 3
+                                   min: 1, max: 3
                             },
                      },
               ],
@@ -45,6 +45,11 @@ const orderSchema = new mongoose.Schema(
                      default: "pending",
               },
 
+              isPayed: {
+                     type: Boolean,
+                     default: false
+              }
+              ,
               orderStatus: {
                      type: String,
                      enum: ["placed", "confirmed", "delivered", "cancelled"],
@@ -60,7 +65,6 @@ const orderSchema = new mongoose.Schema(
                             type: String,
                             required: true,
                      },
-                     houseNumber: String,
                      place: String,
                      city: {
                             type: String,
