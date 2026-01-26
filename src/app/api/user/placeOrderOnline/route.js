@@ -11,7 +11,7 @@ export async function POST(req) {
        try {
               await dbConnect();
 
-              const { user, items, paymentMethod, address, totalAmount } =
+              const { user, items, paymentMethod, address, totalAmount} =
                      await req.json();
 
               if (!user || !items || !address || !totalAmount || !paymentMethod) {
