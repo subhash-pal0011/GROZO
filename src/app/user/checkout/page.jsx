@@ -31,7 +31,6 @@ const Page = () => {
        //2-CONTAINER
        const [selectPaymentMethod, setSelectPaymentMethod] = useState("online")
        const { grandTotal, cartData, platformCharge, discount, deliveryCharge } = useSelector((state) => state.card);
-       console.log(platformCharge, discount, deliveryCharge)
        const { selectedAddress } = useSelector((state) => state.address);
 
 
