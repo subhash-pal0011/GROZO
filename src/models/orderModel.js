@@ -83,12 +83,31 @@ const orderSchema = new mongoose.Schema(
                      longitude: Number,
               },
 
-              totalAmount: {
-                     type: Number,
-                     required: true,
+              priceDetails: {
+                     subTotal: {
+                            type: Number,
+                            required: true,
+                     },
+                     deliveryCharge: {
+                            type: Number,
+                            required: true,
+                     },
+                     platformFee: {
+                            type: Number,
+                            required: true,
+                     },
+                     discount: {
+                            type: Number,
+                            default: 0,
+                     },
+                     totalAmount: {
+                            type: Number,
+                            required: true,
+                     },
               },
        },
-       { timestamps: true}
+       { timestamps: true }
 );
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 export default Order;
+

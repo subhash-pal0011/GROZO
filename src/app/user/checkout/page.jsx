@@ -30,9 +30,8 @@ const Page = () => {
 
        //2-CONTAINER
        const [selectPaymentMethod, setSelectPaymentMethod] = useState("online")
-       const { grandTotal, cartData, platformCharge, discount, deliveryCharge } = useSelector((state) => state.card);
+       const { grandTotal, cartData, totalPrice, deliveryCharge, platformCharge, discount} = useSelector((state) => state.card);
        const { selectedAddress } = useSelector((state) => state.address);
-
 
        const handlePlaceOrder = async () => {
               if (!userData?._id) {
@@ -58,7 +57,13 @@ const Page = () => {
                                    items: cartData,
                                    paymentMethod: "cod",
                                    address: selectedAddress?._id,
-                                   totalAmount: grandTotal,
+                                   priceDetails: {
+                                          subTotal: totalPrice,
+                                          deliveryCharge,
+                                          platformFee: platformCharge,
+                                          discount,
+                                          totalAmount: grandTotal,
+                                   }
                             });
 
                             if (res.data.success) {
@@ -74,13 +79,17 @@ const Page = () => {
                                    items: cartData,
                                    paymentMethod: "online",
                                    address: selectedAddress?._id,
-                                   totalAmount: grandTotal,
-                                   plateFormPiss:platformCharge,
-                                   disCount:discount,
-                                   dileviryChrge :deliveryCharge
-                            })
+                                   priceDetails: {
+                                          subTotal: totalPrice,
+                                          deliveryCharge,
+                                          platformFee: platformCharge,
+                                          discount,
+                                          totalAmount: grandTotal,
+                                   },
+                            });
+
                             if (res.data.success) {
-                                   window.location.href = res.data.url;  // 🧠 “Online payment me backend Stripe checkout session create karta hai aur ek secure URL return karta hai. Browser ka control frontend ke paas hota hai, isliye frontend window.location.href se user ko Stripe checkout page par redirect karta hai.”
+                                   window.location.href = res.data.url;
                             }
                      }
               } catch (err) {
@@ -531,3 +540,31 @@ const Page = () => {
 };
 
 export default Page;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

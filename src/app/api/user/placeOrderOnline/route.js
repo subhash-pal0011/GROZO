@@ -11,10 +11,9 @@ export async function POST(req) {
        try {
               await dbConnect();
 
-              const { user, items, paymentMethod, address, totalAmount} =
-                     await req.json();
-
-              if (!user || !items || !address || !totalAmount || !paymentMethod) {
+              const {user, items, paymentMethod, address, priceDetails,} = await req.json();
+                     
+              if (!user || !items?.length || !address || !paymentMethod || !priceDetails?.totalAmount) {
                      return NextResponse.json(
                             { success: false, message: "All required fields are required" },
                             { status: 400 }
@@ -24,7 +23,7 @@ export async function POST(req) {
               const userExist = await User.findById(user);
               if (!userExist) {
                      return NextResponse.json(
-                            { success: false, message: "User does not exist" },
+                            { success: false, message: "User not found" },
                             { status: 404 }
                      );
               }
@@ -37,19 +36,7 @@ export async function POST(req) {
                      );
               }
 
-              // 4️⃣ 🔥 Quantity limit check (MAX 3)
-              const invalidItem = items.find((item) => item.qty > 3);
-              if (invalidItem) {
-                     return NextResponse.json(
-                            {
-                                   success: false,
-                                   message: `Maximum 3 quantity allowed for ${invalidItem.name}`,
-                            },
-                            { status: 400 }
-                     );
-              }
-
-              const formattedItems = items.map((item) => ({
+              const formattedItems = items.map((item) => ({ // 🧠 ITME EK UNDER BAHOT SARE DATA HII ITEM KO HUMNE EK SMJO CONTAINER BANA DIYA AB ISKE CHHOTE CHHOTE BOX KE UNDER DATA RKHA HII.
                      grocery: item._id,
                      name: item.name,
                      price: item.price,
@@ -58,21 +45,36 @@ export async function POST(req) {
                      quantity: item.qty,
               }));
 
-              // 6️⃣ Order create (payment pending)
               const newOrder = await Order.create({
                      user: userExist._id,
                      items: formattedItems,
                      paymentMethod,
                      paymentStatus: "pending",
+                     isPayed: false,
                      orderStatus: "placed",
-                     address: userAddress,
-                     totalAmount,
+                     address: {
+                            name: userAddress.name,
+                            mobile: userAddress.mobile,
+                            city: userAddress.city,
+                            pinCode: userAddress.pinCode,
+                            fullAddress: userAddress.fullAddress,
+                            latitude: userAddress.latitude,
+                            longitude: userAddress.longitude,
+                     },
+                     priceDetails: {
+                            subTotal: priceDetails.subTotal,
+                            deliveryCharge: priceDetails.deliveryCharge,
+                            platformFee: priceDetails.platformFee,
+                            discount: priceDetails.discount || 0,
+                            totalAmount: priceDetails.totalAmount,
+                     },
               });
 
-              // 7️⃣ Stripe session
               const session = await stripe.checkout.sessions.create({
+                     //  YE SESSION KA SYNTEX HUM STRIPE SE DEKH KR LIKHA HII.
                      payment_method_types: ["card"],
                      mode: "payment",
+
                      success_url: "http://localhost:3000/user/payment-success",
                      cancel_url: "http://localhost:3000/user/payment-failed",
 
@@ -83,7 +85,7 @@ export async function POST(req) {
                                           product_data: {
                                                  name: "GROZO Order",
                                           },
-                                          unit_amount: totalAmount * 100, // ✅ rupees → paise
+                                          unit_amount: priceDetails.totalAmount * 100, // rupees → paise
                                    },
                                    quantity: 1,
                             },
@@ -95,18 +97,17 @@ export async function POST(req) {
                      },
               });
 
-              // 8️⃣ FINAL RESPONSE
               return NextResponse.json(
                      {
                             success: true,
                             message: "Stripe session created",
-                            sessionId: session.id,
                             url: session.url,
+                            sessionId: session.id,
                      },
                      { status: 200 }
               );
        } catch (error) {
-              console.error("Stripe Order Error:", error);
+              console.error("Place order online error:", error);
               return NextResponse.json(
                      { success: false, message: "Internal server error" },
                      { status: 500 }
