@@ -30,7 +30,8 @@ const Page = () => {
 
        //2-CONTAINER
        const [selectPaymentMethod, setSelectPaymentMethod] = useState("online")
-       const { grandTotal, cartData } = useSelector((state) => state.card);
+       const { grandTotal, cartData, platformCharge, discount, deliveryCharge } = useSelector((state) => state.card);
+       console.log(platformCharge, discount, deliveryCharge)
        const { selectedAddress } = useSelector((state) => state.address);
 
 
@@ -75,6 +76,9 @@ const Page = () => {
                                    paymentMethod: "online",
                                    address: selectedAddress?._id,
                                    totalAmount: grandTotal,
+                                   plateFormPiss:platformCharge,
+                                   disCount:discount,
+                                   dileviryChrge :deliveryCharge
                             })
                             if (res.data.success) {
                                    window.location.href = res.data.url;  // 🧠 “Online payment me backend Stripe checkout session create karta hai aur ek secure URL return karta hai. Browser ka control frontend ke paas hota hai, isliye frontend window.location.href se user ko Stripe checkout page par redirect karta hai.”
