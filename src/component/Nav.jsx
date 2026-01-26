@@ -329,7 +329,7 @@ const Nav = ({ user }) => {
 
                                                                <motion.div whileTap={{ scale: 0.93 }}>
                                                                       <Link
-                                                                             href="#"
+                                                                             href="/admin/manage-grocery"
                                                                              className="cursor-pointer border p-2 rounded-3xl bg-white text-orange-300 text-xs font-semibold flex items-center gap-1"
                                                                       >
                                                                              Manage Grocery <MdOutlineManageAccounts size={13} />
