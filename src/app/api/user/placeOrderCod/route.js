@@ -8,7 +8,7 @@ export async function POST(req) {
        try {
               await dbConnect();
 
-              const { user, items, paymentMethod, address, totalAmount } = await req.json();
+              const { user, items, paymentMethod, address, totalAmount} = await req.json();
 
               if (!user || !items || !address || !totalAmount || !paymentMethod) {
                      return NextResponse.json({ success: false, message: "All required fields are required" }, { status: 400 });
