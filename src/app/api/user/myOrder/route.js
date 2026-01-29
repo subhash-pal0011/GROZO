@@ -13,9 +13,9 @@ export async function GET() {
                             { status: 401 }
                      );
               }
-              const order = await Order.find({
-                     user: session.user.id,
-              })
+              const order = await Order.find({user: session.user.id}).sort({createdAt:-1})
+                     
+              
               if (!order) {
                      return NextResponse.json(
                             { success: false, message: "Order does not exist" },
