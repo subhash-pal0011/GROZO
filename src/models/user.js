@@ -26,13 +26,31 @@ const userSchema = new mongoose.Schema(
                      type: Boolean,
                      default: false,
               },
+              socketId:{
+                     type:String,
+                     default:null
+              },
+              isOnline:{
+                     type:Boolean,
+                     default:false
+              },
+              
+              // password: {
+              //        type: String,
+              //        required: function () { // JB USER FORM SE REGISTER HOGA TO PASSWORD REQUIERD RHEGA.
+              //               return this.provider === "credentials"
+              //        }
 
+              // },
+              
               password: {
                      type: String,
-                     required: function () { // JB USER FORM SE REGISTER HOGA TO PASSWORD REQUIERD RHEGA.
-                            return this.provider === "credentials"
-                     }
-
+                     required: false,
+              },
+              provider: { // iska use user email + password (credentials) se bhi login/signup kar sake aur Google / GitHub (OAuth) se bhi login/signup kar sake
+                     type: String,
+                     enum: ["credentials", "google", "github"],
+                     default: "credentials",
               },
 
               mobile: {
@@ -53,10 +71,30 @@ const userSchema = new mongoose.Schema(
               profilePic: {
                      type: String,
                      default: ""
-              }
+              },
+
+              //📌 ISKO IS LIYE USE KR RHE HII DELIVERY BOY KO 4 ,5 KM KE UDER FIND KE LIYE YE AYEGA MONGODB LOCATION SE
+              // 📍 GeoJSON location (Delivery boy radius search ke liye)
+              location: {
+                     type: {
+                            type: String,
+                            enum: ["Point"],
+                            default: "Point",
+                     },
+                     coordinates: { // ISKE UNDER HI  LETITUDE , LONGITUDE RHATA HGII
+                            type: [Number], // [longitude, latitude]
+                            default: [0, 1], // 0,0 MTLB LETITUDE , LONGITUDE 
+                     },
+              },
+              
+              
        },
        { timestamps: true }
 );
+
+userSchema.index({location:"2dsphere"}) // “2dsphere index allows efficient geospatial queries like finding nearby users or delivery agents based on latitude and longitude.”
+
+
 
 //🔥 Next.js me hot reload ke kaaran model multiple times compile hota hai,isliye mongoose.models ka check lagate hain
 

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
        try {
-              const { user, name, mobile, city, pinCode, fullAddress, houseNumber, place, state, latitude, longitude, label, } = await req.json();
+              const { user, name, mobile, city, pinCode, fullAddress, houseNumber, place, state, latitude ,longitude,label, } = await req.json();
 
               if (!user || !name || !mobile || !city || !pinCode || !fullAddress) {
                      return NextResponse.json(

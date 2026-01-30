@@ -30,7 +30,7 @@ const Page = () => {
 
        //2-CONTAINER
        const [selectPaymentMethod, setSelectPaymentMethod] = useState("online")
-       const { grandTotal, cartData, totalPrice, deliveryCharge, platformCharge, discount} = useSelector((state) => state.card);
+       const { grandTotal, cartData, totalPrice, deliveryCharge, platformCharge, discount } = useSelector((state) => state.card);
        const { selectedAddress } = useSelector((state) => state.address);
 
        const handlePlaceOrder = async () => {
@@ -119,7 +119,7 @@ const Page = () => {
                      navigator.geolocation.getCurrentPosition(
                             (position) => {
                                    // coords JB CONSOLEKAROGE TO coords MILEGA.
-                                   const { latitude, longitude } = position.coords;
+                                   const {latitude , longitude} = position.coords;
                                    // ✅ Correct
                                    setPosition([latitude, longitude]);
                             },
@@ -143,7 +143,7 @@ const Page = () => {
                      try {
                             const res = await axios.get("/api/reverseGeocode", {
                                    //🧠 position[0]INDEX MTLB latitude [1]INDEX MTLB longitude
-                                   params: { lat: position[0], lon: position[1], },
+                                   params: {lat: position[0] ,lon: position[1]},
                             });
 
                             // console.log("current datas:" , res.data) 
@@ -178,9 +178,8 @@ const Page = () => {
                      }
                      const lat = parseFloat(res.data.lat);
                      const lon = parseFloat(res.data.lon);
-
                      // 🔥 Map + reverse geocode dono set ho jyenge is liye
-                     setPosition([lat, lon]);
+                     setPosition([lat , lon]);
 
               } catch (err) {
                      console.error("Search error:", err);

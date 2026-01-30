@@ -16,6 +16,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { setSelectedAddress } from "@/redux/addressSlice";
 import { useRouter } from "next/navigation";
+import { getSocket } from "@/lib/socket";
 
 const Nav = ({ user }) => {
        const [open, setOpen] = useState(false)
@@ -30,6 +31,21 @@ const Nav = ({ user }) => {
        const [addresses, setAddresses] = useState([]);
 
        const dispatch = useDispatch()
+
+
+       useEffect(() => {
+              if (!user?._id) return;
+
+              const socket = getSocket();
+
+              socket.emit("join", {
+                     userId: user._id,
+              });
+
+              return () => {
+                     socket.off("connect");
+              };
+       }, [user?._id]);
 
 
        useEffect(() => {

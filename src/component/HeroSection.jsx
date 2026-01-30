@@ -40,7 +40,6 @@ const HeroSection = () => {
        const totalSlides = slides.length;
        const [isHovered, setIsHovered] = useState(false);
 
-
        useEffect(() => {
               if (isHovered) return; // hover pe slide stop
               const interval = setInterval(() => {

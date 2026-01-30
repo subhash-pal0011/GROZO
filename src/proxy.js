@@ -33,9 +33,6 @@ export async function proxy(request) {
               return NextResponse.redirect(new URL("/unAuthroize" , req.url))
        }
 
-
-
-
        return NextResponse.next()
 }
 

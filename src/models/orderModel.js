@@ -56,6 +56,12 @@ const orderSchema = new mongoose.Schema(
                      default: "confirmed",
               },
 
+              orderAssignd:{ // AGR USER KO EK BAR NOTIFICATION CHALA GYA IS ORDER KE LIYE DUBARA ISI DELIVERY BOY KO NA JAKR KISI AUR KO JANE KE LIYE  ISKA USE SEND NOTIFICATION DELIVERY BOY MEA HOGA 
+                     type:mongoose.Schema.Types.ObjectId,
+                     ref:"DeliveryAssignment",
+                     default:null
+              },
+
               address: {
                      name: {
                             type: String,
