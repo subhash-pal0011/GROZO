@@ -1,4 +1,5 @@
 import dbConnect from "@/connectDb/dbConnect";
+import eventHandlerForIndexJs from "@/lib/eventHandelerForIndexJs";
 import Order from "@/models/orderModel";
 import User from "@/models/user";
 import Address from "@/models/userAdressModel";
@@ -11,8 +12,8 @@ export async function POST(req) {
        try {
               await dbConnect();
 
-              const {user, items, paymentMethod, address, priceDetails,} = await req.json();
-                     
+              const { user, items, paymentMethod, address, priceDetails, } = await req.json();
+
               if (!user || !items?.length || !address || !paymentMethod || !priceDetails?.totalAmount) {
                      return NextResponse.json(
                             { success: false, message: "All required fields are required" },
@@ -69,6 +70,9 @@ export async function POST(req) {
                             totalAmount: priceDetails.totalAmount,
                      },
               });
+
+              // "new-order" sirf event name hai, koi bhi custom naam ho sakta hai
+              await eventHandlerForIndexJs({ event: "new-order-Online-pay", data: newOrder });
 
               const session = await stripe.checkout.sessions.create({
                      //  YE SESSION KA SYNTEX HUM STRIPE SE DEKH KR LIKHA HII.
