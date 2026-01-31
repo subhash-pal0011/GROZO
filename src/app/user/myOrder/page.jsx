@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { IoChevronDownSharp, IoChevronUpSharp } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
+import { getSocket } from "@/lib/socket";
 
 const Page = () => {
        const router = useRouter();
@@ -27,6 +28,26 @@ const Page = () => {
               };
               getOrder();
        }, []);
+
+
+       useEffect(() => {
+              const socket = getSocket();
+              const handleStatus = (data) => {
+                     setOrders((prevOrders) =>
+                            // order._id === data.orderId  mtlb  jo orderid hii data ke orderid ke jo equel hii unhi ka status change.
+                            prevOrders.map((order) => order._id === data.orderId ? { ...order, orderStatus: data.status } : order )
+                            
+                     );
+              };
+
+              socket.on("order-status-updated", handleStatus);
+
+              return () => {
+                     socket.off("order-status-updated", handleStatus);
+              };
+       }, []);
+
+
 
        if (loader) {
               return (
