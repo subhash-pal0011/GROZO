@@ -6,6 +6,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { IoChevronDownSharp, IoChevronUpSharp } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
+import { getSocket } from "@/lib/socket";
 
 const Page = () => {
        const router = useRouter();
@@ -15,9 +16,9 @@ const Page = () => {
 
        const handleStatusChange = async (orderId, status) => {
               try {
-                     const res = await axios.post(`/api/admin/updateOrderStatus/${orderId}`,{ status });
+                     const res = await axios.post(`/api/admin/updateOrderStatus/${orderId}`, { status });
                      setOrders(prev =>
-                            prev.map(order => order._id === orderId ? {...order, orderStatus:status} : order)
+                            prev.map(order => order._id === orderId ? { ...order, orderStatus: status } : order)
                      );
                      toast.success(res.data?.message || "Updated");
               } catch (error) {
@@ -43,6 +44,50 @@ const Page = () => {
 
               getOrders();
        }, []);
+
+
+       //COD ka hii ,CASH ON DELIVERY KROGE TO ISS YE ORDER AYEGA
+       useEffect(() => {
+              const socket = getSocket();
+
+              /*
+                "new-order" event ka naam
+                backend se emit hua event yahin listen hoga
+                jo data backend se bheja gaya hoga wahi yahan milega
+              */
+              const handleNewOrder = (data) => {
+                     setOrders((prev) => [data, ...prev]);
+              };
+
+              socket.on("new-order", handleNewOrder);
+
+              return () => {
+                     socket.off("new-order", handleNewOrder);
+              };
+       }, []);
+
+
+       // YE ONLINE PAYMENT KA HII , ONLINE PAYMENT SE  KRKE ORDER KROGO TO YE HII
+       useEffect(() => {
+              const socket = getSocket();
+
+              /*
+                "new-order-Online-pay" event ka naam
+                backend se emit hua event yahin listen hoga
+                jo data backend se bheja gaya hoga wahi yahan milega
+              */
+              const newOrder = (data) => {
+                     setOrders((prev) => [data, ...prev]);
+              };
+
+              socket.on("new-order-Online-pay", newOrder );
+
+              return () => {
+                     socket.off("new-order-Online-pay", newOrder);
+              };
+       }, []);
+
+
 
        if (loading) {
               return (
