@@ -3,6 +3,7 @@ import dbConnect from "@/connectDb/dbConnect";
 import Order from "@/models/orderModel";
 import User from "@/models/user";
 import DeliveryAssignment from "@/models/deliveryAssignmentSchema";
+import eventHandlerForIndexJs from "@/lib/eventHandelerForIndexJs";
 
 export async function POST(req, { params }) {
        try {
@@ -25,6 +26,9 @@ export async function POST(req, { params }) {
 
               order.orderStatus = status;
               await order.save();
+              // 🔥 USER ko order status update rel time
+              await eventHandlerForIndexJs({ event: "order-status-updated", data: { orderId: order._id, status: order.orderStatus, } })
+
 
               // order.deliveryBoyId mtlb koi bhi order ko koi deliver accsept nhi kiya o deliveryBy
               if (status === "confirmed" && !order.deliveryBoyId) {
@@ -32,7 +36,7 @@ export async function POST(req, { params }) {
                      const { latitude, longitude } = order.address;
 
                      // JO ORDER LEKR JA RHE HII DE_BOY UNHE ISI TRIKE SE NIKALENGE.
-                     const busyAssignments = await DeliveryAssignment.find({ 
+                     const busyAssignments = await DeliveryAssignment.find({
                             deliveryStatus: { $in: ["accepted", "out_for_delivery"] }// JINK STATUS YE SB NHI HII
                      }).select("deliveryBoyId"); // SELECT KR LO DELIVERY BOY UN SB KO
 
@@ -72,6 +76,11 @@ export async function POST(req, { params }) {
                                    paymentMode: order.paymentMethod.toUpperCase(),
                             });
                             assignments.push(assignment);
+
+                            // 🚴 Real-time emit only if delivery boy online , online pata krenge socketId jin-2 deliBoy ki id socketId ke thrugh a rhi hiiunhi ko bhejna hii.
+                            if(boy.socketId){
+                                   await eventHandlerForIndexJs({event: "new-order-assign", data: {orderId: order._id, assignmentId: assignment._id} , socketId: boy.socketId});
+                            }
                      }
 
                      return NextResponse.json({
@@ -88,7 +97,7 @@ export async function POST(req, { params }) {
               });
 
        } catch (error) {
-              console.error("updateOrderStatus error:",error);
+              console.error("updateOrderStatus error:", error);
               return NextResponse.json(
                      { success: false, message: "Server error" },
                      { status: 500 }
