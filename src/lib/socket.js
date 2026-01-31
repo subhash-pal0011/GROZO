@@ -1,3 +1,6 @@
+
+// AGR HUME SOCKET KO CLINET SIDE MEA CHHIYE TO ISKE TRHUGH HI ACCESS KR SKTE HII.
+
 import { io } from "socket.io-client";
 
 let socket = null;
