@@ -1,4 +1,5 @@
 import dbConnect from "@/connectDb/dbConnect";
+import eventHandlerForIndexJs from "@/lib/eventHandelerForIndexJs";
 import Order from "@/models/orderModel";
 import User from "@/models/user";
 import Address from "@/models/userAdressModel";
@@ -9,7 +10,7 @@ export async function POST(req) {
               await dbConnect();
 
               const { user, items, paymentMethod, address, priceDetails } = await req.json();
-                     
+
               if (!user || !items?.length || !address || !paymentMethod || !priceDetails?.totalAmount) {
                      return NextResponse.json(
                             { success: false, message: "All required fields are required" },
@@ -66,6 +67,10 @@ export async function POST(req) {
                             totalAmount: priceDetails.totalAmount,
                      },
               });
+
+              // "new-order" sirf event name hai, koi bhi custom naam ho sakta hai
+              await eventHandlerForIndexJs({event: "new-order", data: newOrder});
+              
 
               return NextResponse.json(
                      { success: true, message: "Order placed successfully", data: newOrder },
