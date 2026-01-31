@@ -384,7 +384,7 @@ const Nav = ({ user }) => {
                                                                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                                                                       transition={{ duration: 0.3 }}
                                                                >
-                                                                      <div className="text-gray-700 gap-2 flex items-center">
+                                                                      <div className="text-gray-700 gap-2 flex items-center p-1">
                                                                              {user?.profilePic ? (
                                                                                     <Image
                                                                                            src={user?.profilePic}
@@ -404,9 +404,10 @@ const Nav = ({ user }) => {
                                                                                     <p className="text-sm font-semibold m-0 leading-tight">
                                                                                            {user?.name}
                                                                                     </p>
-                                                                                    <p className="text-sm m-0 leading-tight">
-                                                                                           {user?.role || ""}
+                                                                                    <p className="text-xs m-0 leading-tight text-gray-600">
+                                                                                           {user?.role ? user.role.toUpperCase() : ""}
                                                                                     </p>
+
                                                                              </span>
                                                                       </div>
 
