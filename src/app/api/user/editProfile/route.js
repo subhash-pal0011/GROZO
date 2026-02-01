@@ -21,17 +21,17 @@ export async function POST(req) {
               
               // 🔥 DUPLICATE MOBILE CHECK
               // Agar ek hi number se do alag accounts (role select) sign up karte hain,  to verify OTP ke baad age badhne me issue hota tha kyunki Twilio confuse ho jata tha. Isliye yaha check kar rahe hain aur user ko bataenge ki number already declared hai.
-              const existingUser = await User.findOne({
-                     mobile,
-                     email: { $ne: session.user.email } // ye check karega ki ye mobile kisi aur account pe hai kya
-              });
+              // const existingUser = await User.findOne({
+              //        mobile,
+              //        email: { $ne: session.user.email } // ye check karega ki ye mobile kisi aur account pe hai kya
+              // });
 
-              if (existingUser) {
-                     return NextResponse.json(
-                            { success: false, message: "This mobile number is already linked to another role" },
-                            { status: 400 }
-                     );
-              }
+              // if (existingUser) {
+              //        return NextResponse.json(
+              //               { success: false, message: "This mobile number is already linked to another role" },
+              //               { status: 400 }
+              //        );
+              // }
 
 
               const user = await User.findOneAndUpdate(
