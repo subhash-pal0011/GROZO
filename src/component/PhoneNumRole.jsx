@@ -39,11 +39,12 @@ const PhoneNumRole = () => {
       const res = await axios.post("/api/user/editProfile", { ...data, role: selectedRole });
       if (res.data.success) {
         await sendOtp(data.mobile)
-        toast.success("Profile updated successfully");
+        toast.success(res.data.message || "Profile updated successfully");
+
         router.refresh();
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "This mobile number is not linked with your account");
       console.log("Edit profile error:", error);
     }
   };
