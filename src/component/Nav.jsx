@@ -145,7 +145,7 @@ const Nav = ({ user }) => {
                                           </Link>
 
                                           <Link
-                                                 href="#"
+                                                 href="/admin/manage-grocery"
                                                  className="cursor-pointer border p-2 rounded-3xl bg-white text-orange-300 text-xs font-semibold flex items-center gap-1"
                                           >
                                                  Manage Grocery <MdOutlineManageAccounts size={13} />
@@ -231,62 +231,6 @@ const Nav = ({ user }) => {
                                           </div>
                                    }
 
-                                   {/* <div className="relative">
-                                          <button onClick={() => setLocationOpen(prev => !prev)}
-                                                 className="flex items-center cursor-pointer">
-                                                 <img src="/location-2.gif" className="h-8" />
-                                                 <FaAnglesDown className="cursor-pointer" size={20} />
-                                          </button>
-                                          <AnimatePresence>
-                                                 {locationOpen &&
-                                                        <motion.div
-                                                               initial={{
-                                                                      y: 10, opacity: 0, scale: 0.5
-                                                               }}
-                                                               animate={{
-                                                                      x: 0, opacity: 1, scale: 1
-                                                               }}
-                                                               exit={{
-                                                                      opacity: 0, y: -10, scale: 0.95
-                                                               }}
-                                                               transition={{
-                                                                      duration: 0.3
-                                                               }}
-                                                               className="absolute top-full md:-right-50 -right-10 mt-2 text-gray-800 bg-gray-100 md:w-90 w-60 p-3 rounded-md shadow-lg z-30">
-                                                               {addresses.length === 0 ? (
-                                                                      <p className="text-sm text-gray-500">No saved address</p>
-                                                               ) : (
-                                                                      addresses.map((addr) => (
-                                                                             <div
-                                                                                    key={addr._id}
-                                                                                    onClick={() => dispatch(setSelectedAddress(addr))}
-                                                                                    className="border-b pb-2 mb-2 cursor-pointer hover:bg-gray-200 p-1 rounded"
-                                                                             >
-                                                                                    <div
-                                                                                           className="flex gap-2">
-                                                                                           <p className="text-xs font-semibold capitalize">
-                                                                                                  {addr.label || "Address"}
-                                                                                           </p>
-                                                                                           <button onClick={() => handleDeleteAddress(addr._id)}>
-                                                                                                  <img src="/delete-1.gif" alt="icon" className="w-4 h-4" />
-                                                                                           </button>
-                                                                                    </div>
-
-                                                                                    <p className="text-xs text-gray-600 line-clamp-2">
-                                                                                           {addr.fullAddress}
-                                                                                    </p>
-
-                                                                                    <p className="text-[11px] text-gray-500">
-                                                                                           {addr.city} - {addr.pinCode}
-                                                                                    </p>
-                                                                             </div>
-                                                                      ))
-
-                                                               )}
-                                                        </motion.div>
-                                                 }
-                                          </AnimatePresence>
-                                   </div> */}
 
                                    {user?.role === "user" &&
                                           <div className="hidden md:block relative w-full max-w-md">
@@ -442,9 +386,9 @@ const Nav = ({ user }) => {
                                           type="text"
                                           placeholder="Search for grozo..."
                                           className="w-full pl-14 pr-4 py-3 rounded-full border border-gray-200
-                                   bg-white text-gray-600 placeholder-gray-400
-                                   focus:outline-none focus:ring-2 focus:ring-green-100
-                                   shadow-sm hover:shadow-md transition"
+                                          bg-white text-gray-600 placeholder-gray-400
+                                          focus:outline-none focus:ring-2 focus:ring-green-100
+                                          shadow-sm hover:shadow-md transition"
                                    />
                                    <img
                                           src="/surch-3.gif"
