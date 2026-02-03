@@ -7,9 +7,10 @@
 import axios from "axios";
 
 const eventHandlerForIndexJs = async ({ socketId, event, data }) => {
+     
        try {
               await axios.post(
-                     `${process.env.NEXT_PUBLIC_NODE_SOCKET_URL}/notifyRoute`,{socketId,event,data,}
+                     `${process.env.NEXT_PUBLIC_NODE_SOCKET_URL}/notifyRoute`, { socketId, event, data, }
               );
        } catch (error) {
               console.error(
@@ -20,3 +21,8 @@ const eventHandlerForIndexJs = async ({ socketId, event, data }) => {
 };
 
 export default eventHandlerForIndexJs;
+
+
+
+
+
