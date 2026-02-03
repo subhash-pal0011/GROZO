@@ -26,6 +26,7 @@ export async function POST(req, { params }) {
 
               order.orderStatus = status;
               await order.save();
+
               // 🔥 USER ko order status update rel time
               await eventHandlerForIndexJs({ event: "order-status-updated", data: { orderId: order._id, status: order.orderStatus, } })
 
@@ -37,15 +38,16 @@ export async function POST(req, { params }) {
 
                      // JO ORDER LEKR JA RHE HII DE_BOY UNHE ISI TRIKE SE NIKALENGE.
                      const busyAssignments = await DeliveryAssignment.find({
-                            deliveryStatus: { $in: ["accepted", "out_for_delivery"] }// JINK STATUS YE SB NHI HII
+                            deliveryStatus: { $in: ["accepted", "out_for_delivery"] }// JINKA STATUS YE SB NHI HII,
                      }).select("deliveryBoyId"); // SELECT KR LO DELIVERY BOY UN SB KO
 
                      const busyBoyIds = busyAssignments.map(a => a.deliveryBoyId);
 
-                     const nearbyDeliveryBoys = await User.find({
-                            role: "delivery",
-                            isOnline: true,
-                            _id: { $nin: busyBoyIds },
+                     const nearbyDeliveryBoys = await User.find({ // DELIVERY BOY GIND KRO JINKA--
+                            role: "delivery", //ROLE delivery HO
+                            isOnline: true,  // JO ONLINE HO
+                            socketId: { $ne: null },  // JINKI SOCKETiD NULL NA TBHI ONLINE CHEK KR PYENGE
+                            _id: { $nin: busyBoyIds },  // JO BUSY NA HO
                             location: {
                                    $near: {
                                           $geometry: {
@@ -55,19 +57,10 @@ export async function POST(req, { params }) {
                                           $maxDistance: 10000,
                                    },
                             },
-                     }).select("name mobile");
-
-                     if (nearbyDeliveryBoys.length === 0) {
-                            return NextResponse.json({
-                                   success: true,
-                                   deliveryBoyAssigned: false,
-                                   message: "Order confirmed (no delivery boy nearby)",
-                            });
-                     }
-
-                     const assignments = [];
+                     });
 
                      for (const boy of nearbyDeliveryBoys) {
+
                             const assignment = await DeliveryAssignment.create({
                                    orderId: order._id,
                                    customerId: order.user,
@@ -75,20 +68,16 @@ export async function POST(req, { params }) {
                                    deliveryStatus: "assigned",
                                    paymentMode: order.paymentMethod.toUpperCase(),
                             });
-                            assignments.push(assignment);
 
-                            // 🚴 Real-time emit only if delivery boy online , online pata krenge socketId jin-2 deliBoy ki id socketId ke thrugh a rhi hiiunhi ko bhejna hii.
-                            if(boy.socketId){
-                                   await eventHandlerForIndexJs({event: "new-order-assign", data: {orderId: order._id, assignmentId: assignment._id} , socketId: boy.socketId});
-                            }
+
+                            const populatedAssignment = await DeliveryAssignment.findById(assignment._id)
+                            .populate("orderId");
+                            await eventHandlerForIndexJs({
+                                   event: "new-order-assign",
+                                   data: populatedAssignment,
+                                   socketId: boy.socketId,
+                            });
                      }
-
-                     return NextResponse.json({
-                            success: true,
-                            deliveryBoyAssigned: true,
-                            message: "Order confirmed & delivery boys assigned",
-                            assignments,
-                     });
               }
               return NextResponse.json({
                      success: true,
