@@ -1,17 +1,30 @@
 "use client";
 import { getSocket } from "@/lib/socket";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import dynamic from "next/dynamic";
+const UpdateLocationForDeliveryBoy = dynamic(
+  () => import("./UpdateLocationForDeliveryBoy"),
+  { ssr: false }
+);
+
+
 const DeliveryBoyDashboard = () => {
   const [data, setData] = useState([]);
+  const [activeOrder, setActiveOrder] = useState(null);
+  const [orderLocation, setOrderLocation] = useState(null);
+  const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null)
+  const session = useSession()
+  const userId = session?.user?.id
+  const socket = getSocket()
 
 
   useEffect(() => {
     const getOrderNotification = async () => {
       const res = await axios.get("/api/delivery/getDeliveryAssignment");
-      // console.log("🔥 RESPONSE:", res.data.data);
       setData(res.data.data || []);
     };
 
@@ -30,10 +43,7 @@ const DeliveryBoyDashboard = () => {
     return () => socket.off("new-order-assign", handleNewOrderAssign);
   }, []);
 
-
-
-
-
+  // ACCEPT ORDER BUTTON
   const handelAcceptOrder = async (id) => {
     try {
       const res = await axios.get(`/api/delivery/assignment/accept/${id}`);
@@ -52,6 +62,80 @@ const DeliveryBoyDashboard = () => {
       toast.error(error.response?.data?.message);
     }
   };
+
+
+
+  // ACCEPT KRNE KE BAD USER KA DATA
+  useEffect(() => {
+    const fetchAcceptedOrder = async () => {
+      const res = await axios.get("/api/delivery/getAcceptOrder");
+      if (res.data.success && res.data.data) {
+        setActiveOrder(res.data.data);
+      }
+    };
+    fetchAcceptedOrder();
+  }, []);
+
+  useEffect(() => {
+    if (activeOrder?.orderId?.address) {
+      setOrderLocation({
+        latitude: activeOrder.orderId.address.latitude,
+        longitude: activeOrder.orderId.address.longitude,
+      });
+    }
+  }, [activeOrder]);
+
+
+  //LIVE LOCATION (ONLY AFTER ACCEPT)
+  useEffect(() => {  // YE DEGA LIVE LOCATION DELIVERY BOY KI.
+    const socket = getSocket();
+
+    if (!navigator.geolocation) return;
+
+    const watcher = navigator.geolocation.watchPosition(
+      (pos) => {
+        const latitude = pos.coords.latitude;
+        const longitude = pos.coords.longitude;
+
+        setDeliveryBoyLocation({ latitude, longitude });
+
+        socket.emit("update-location", {
+          userId,
+          location: {
+            type: "Point",
+            coordinates: [longitude, latitude], // 🧠 PAHLE longitude KYUKI JB STATUS CONFERM KROGE TO TUMHRE ORDER SE JITNE 10KM MEA DELIVERY BOY RHENGE UNKE PASS NOTIFICATION JYEGA ORDER PUCHANE KE LIYE 
+          },
+        });
+      },
+      (error) => {
+        console.log("Location error:", error);
+      },
+      { enableHighAccuracy: true }
+    );
+    return () => navigator.geolocation.clearWatch(watcher);
+  }, []);
+
+
+
+
+
+
+
+
+  if (activeOrder && orderLocation) {
+    return (
+      <div className="min-h-screen  bg-linear-to-r from-green-100 via-green-100 to-orange-100 text-gray-800">
+
+        <div className="mx-auto max-w-xl p-5">
+          <div className="text-center">
+            <h1 className="text-green-500 text-xl font-semibold">Active Order</h1>
+          </div>
+
+        </div>
+        <UpdateLocationForDeliveryBoy orderLocation={orderLocation} deliveryBoyLocation={deliveryBoyLocation} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-linear-to-r from-green-100 via-green-100 to-orange-100 text-gray-800 flex flex-col items-center justify-center md:p-5 p-2">
