@@ -52,11 +52,11 @@ const orderSchema = new mongoose.Schema(
               ,
               orderStatus: {
                      type: String,
-                     enum: ["placed", "confirmed", "delivered", "cancelled"],
+                     enum: ["placed", "confirmed", "out_for_delivery" , "delivered", "cancelled"],
                      default: "confirmed",
               },
 
-              orderAssignd:{ // AGR USER KO EK BAR NOTIFICATION CHALA GYA IS ORDER KE LIYE DUBARA ISI DELIVERY BOY KO NA JAKR KISI AUR KO JANE KE LIYE  ISKA USE SEND NOTIFICATION DELIVERY BOY MEA HOGA 
+              orderAssignd:{ // AGR USER KO EK BAR NOTIFICATION CHALA GYA IS ORDER KE LIYE DUBARA ISI DELIVERY BOY KO NA JAKR KISI AUR KO JANE KE LIYE  
                      type:mongoose.Schema.Types.ObjectId,
                      ref:"DeliveryAssignment",
                      default:null
