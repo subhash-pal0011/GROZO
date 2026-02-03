@@ -27,7 +27,8 @@ const deliveryAssignmentSchema = new mongoose.Schema(
               deliveryStatus: {
                      type: String,
                      enum: [
-                            "assigned",          // admin ne delivery boy ko diya
+                            //🧠 assigned = mtlb Order abhi delivery boy ko diya gaya hai lekin abhi tak kisi ne accept nahi kiya. 
+                            "assigned",         
                             "accepted",          // delivery boy ne accept kiya
                             "out_for_delivery",  // order leke nikla
                             "delivered",         // successfully delivered
