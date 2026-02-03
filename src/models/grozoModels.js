@@ -45,6 +45,5 @@ const grozoSchema = new mongoose.Schema({
               required:true
        }
 },{timestamps:true})
-
 const Grozo = mongoose.models.Grozo || mongoose.model("Grozo", grozoSchema)
 export default Grozo
