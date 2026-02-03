@@ -357,7 +357,7 @@ const Nav = ({ user }) => {
 
                                                                       {user?.role === "user" &&
                                                                              <button onClick={() => router.push("/user/myOrder")}
-                                                                                    className="flex items-center gap-2 hover:bg-green-100 cursor-pointer p-1">
+                                                                                    className="flex items-center gap-2 hover:bg-green-100 cursor-pointer p-1 w-full">
                                                                                     <Image src="/order.gif" alt="icon" height={30} width={30} />
                                                                                     <p className="text-sm font-semibold leading-tight text-gray-600">My Order</p>
                                                                              </button>
