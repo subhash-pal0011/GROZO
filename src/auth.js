@@ -9,8 +9,9 @@ import User from "./models/user";
 export const { handlers, signIn, signOut, auth } = NextAuth({
        session: {
               strategy: "jwt",
-              maxAge: 10 * 24 * 60 * 60 * 1000
+              maxAge: 10 * 24 * 60 * 60 // 10 days
        },
+
 
        providers: [
               //🧠 YE CREDENTIALS LOGIN VALA HII NICHE GOOGLE KA RHEGA
@@ -112,10 +113,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                             token.email = user.email;
                      }
 
-                     // 🔥 HAR REQUEST pe DB check
+                     //  HAR REQUEST pe DB check
                      const dbUser = await User.findOne({ email: token.email });
 
-                     // ❌ USER DB ME NAHI HAI → TOKEN INVALID
+                     // USER DB ME NAHI HAI → TOKEN INVALID
                      if (!dbUser) {
                             return null;
                      }
