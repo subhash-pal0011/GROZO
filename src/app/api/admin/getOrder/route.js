@@ -1,6 +1,7 @@
 import dbConnect from "@/connectDb/dbConnect";
 import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
+import "@/models/deliveryAssignmentSchema";
 
 export async function GET() {
        try {
