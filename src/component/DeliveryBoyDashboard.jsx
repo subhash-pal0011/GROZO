@@ -65,7 +65,7 @@ const DeliveryBoyDashboard = () => {
 
 
 
-  // ACCEPT KRNE KE BAD USER KA DATA
+  // ACCEPT KRNE KE BAD USER(jo order kiya hii) KA DATA
   useEffect(() => {
     const fetchAcceptedOrder = async () => {
       const res = await axios.get("/api/delivery/getAcceptOrder");
@@ -114,12 +114,6 @@ const DeliveryBoyDashboard = () => {
     );
     return () => navigator.geolocation.clearWatch(watcher);
   }, []);
-
-
-
-
-
-
 
 
   if (activeOrder && orderLocation) {
