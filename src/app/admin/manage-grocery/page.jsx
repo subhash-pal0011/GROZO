@@ -80,7 +80,7 @@ const Page = () => {
                      setOrders((prev) => [data, ...prev]);
               };
 
-              socket.on("new-order-Online-pay", newOrder );
+              socket.on("new-order-Online-pay", newOrder);
 
               return () => {
                      socket.off("new-order-Online-pay", newOrder);
@@ -197,6 +197,28 @@ const Page = () => {
                                                                       }
                                                                </div>
 
+                                                               {order?.orderAssignd &&
+                                                                 
+                                                                      <div className="flex md:flex-row flex-col gap-2 border p-2">
+                                                                             <p className="text-sm text-gray-600">Delivery Assign info :-</p>
+                                                                             <div className="flex items-center text-xs  gap-1">
+                                                                                    <img src="/name.gif" className="h-5 w-5" />
+                                                                                    <p className="capitalize line-clamp-1">{order?.orderAssignd?.deliveryBoyId?.name}</p>
+                                                                             </div>
+
+                                                                             <div className="flex items-center gap-1">
+                                                                                    <img src="/mobile.gif" className="h-5 w-5" />
+                                                                                    <p className="text-xs ">{order?.orderAssignd?.deliveryBoyId?.mobile}</p>
+
+                                                                                    <a href={`tel:${order?.orderAssignd?.deliveryBoyId?.mobil}`}
+                                                                                    className="text-xs rounded border p-1 px-2 border-green-500"
+                                                                                    >Call</a>
+                                                                             </div>
+
+                                                                             
+                                                                             
+                                                                      </div>
+                                                               }
 
                                                                <button
                                                                       onClick={() =>
