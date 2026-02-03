@@ -3,8 +3,8 @@ import "leaflet/dist/leaflet.css"; // NODEMODULE KE UNDER DEKHOGE TO MIL JYEGA.
 import L from "leaflet";
 import { useEffect } from "react";
 
-// 🔴 Marker icon fix LOCATION PIN
-delete L.Icon.Default.prototype._getIconUrl; // 👉iska use Leaflet default icon override karte time ye line add karni chahiye warna kabhi-kabhi build refresh pe icon load issue aa jata hai:
+// Marker icon fix LOCATION PIN
+delete L.Icon.Default.prototype._getIconUrl; //iska use Leaflet default icon override karte time ye line add karni chahiye warna kabhi-kabhi build refresh pe icon load issue aa jata hai:
 L.Icon.Default.mergeOptions({
        iconUrl: "/location-2.gif",
        iconRetinaUrl: "/location-2.gif",    // optional (same bhi chal jayega)
@@ -40,7 +40,7 @@ const MapComponent = ({ position, setPosition }) => {
 
        return (
               <MapContainer
-                     key={position.join(",")}   // 🔥 ye line error khatam karegi
+                     key={position.join(",")}
                      center={position}
                      zoom={15}
                      scrollWheelZoom={false}
@@ -59,7 +59,7 @@ const MapComponent = ({ position, setPosition }) => {
                                    dragend: (e) => {
                                           const marker = e.target;
                                           const { lat, lng } = marker.getLatLng();
-                                          setPosition([lat, lng]); // ✅ correct
+                                          setPosition([lat, lng]); 
                                    },
                             }}
                      >
