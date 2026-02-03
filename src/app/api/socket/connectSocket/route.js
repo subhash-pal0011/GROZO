@@ -19,7 +19,7 @@ export async function POST(req) {
               }
 
               const user = await User.findByIdAndUpdate(userId,{socketId, isOnline: true},
-                     { new: true } //🧠 Taaki updated user mile, purana nahi
+                     { new: true } //🧠 isliye  updated user mile, purana nahi
               );
 
               if (!user) {
