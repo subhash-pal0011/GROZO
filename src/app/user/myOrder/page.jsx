@@ -13,6 +13,7 @@ const Page = () => {
        const [orders, setOrders] = useState([]);
        const [openOrderId, setOpenOrderId] = useState(null);
 
+       
        useEffect(() => {
               const getOrder = async () => {
                      try {
@@ -134,6 +135,10 @@ const Page = () => {
                                                                       <p className="text-xs font-semibold capitalize line-clamp-2">
                                                                              {order?.address?.fullAddress}
                                                                       </p>
+                                                                      
+                                                                      {order?.orderAssignd?.deliveryBoyId &&
+                                                                      <p>{order.orderAssignd.deliveryBoyId.name}</p>
+                                                                      }
                                                                </div>
                                                         </div>
 
