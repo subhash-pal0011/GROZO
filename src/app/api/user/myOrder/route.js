@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import dbConnect from "@/connectDb/dbConnect";
 import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
+import "@/models/deliveryAssignmentSchema";
 
 export async function GET() {
        try {
@@ -13,9 +14,14 @@ export async function GET() {
                             { status: 401 }
                      );
               }
-              const order = await Order.find({user: session.user.id}).sort({createdAt:-1})
-                     
-              
+              const order = await Order.find({ user: session.user.id })
+                     .populate({
+                            path: "orderAssignd",
+                            populate: { path: "deliveryBoyId", select: "name mobile profilePic" }
+                     })
+                     .sort({ createdAt: -1 });
+
+
               if (!order) {
                      return NextResponse.json(
                             { success: false, message: "Order does not exist" },
@@ -35,3 +41,4 @@ export async function GET() {
               );
        }
 }
+
