@@ -6,6 +6,8 @@ import { IoMdArrowBack } from "react-icons/io";
 import { IoChevronDownSharp, IoChevronUpSharp } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
 import { getSocket } from "@/lib/socket";
+import { CiDeliveryTruck } from "react-icons/ci";
+import Link from "next/link";
 
 const Page = () => {
        const router = useRouter();
@@ -13,7 +15,7 @@ const Page = () => {
        const [orders, setOrders] = useState([]);
        const [openOrderId, setOpenOrderId] = useState(null);
 
-       
+
        useEffect(() => {
               const getOrder = async () => {
                      try {
@@ -36,8 +38,8 @@ const Page = () => {
               const handleStatus = (data) => {
                      setOrders((prevOrders) =>
                             // order._id === data.orderId  mtlb  jo orderid hii data ke orderid ke jo equel hii unhi ka status change.
-                            prevOrders.map((order) => order._id === data.orderId ? { ...order, orderStatus: data.status } : order )
-                            
+                            prevOrders.map((order) => order._id === data.orderId ? { ...order, orderStatus: data.status } : order)
+
                      );
               };
 
@@ -47,7 +49,6 @@ const Page = () => {
                      socket.off("order-status-updated", handleStatus);
               };
        }, []);
-
 
 
        if (loader) {
@@ -135,18 +136,41 @@ const Page = () => {
                                                                       <p className="text-xs font-semibold capitalize line-clamp-2">
                                                                              {order?.address?.fullAddress}
                                                                       </p>
-                                                                      
-                                                                      {order?.orderAssignd?.deliveryBoyId &&
-                                                                      <p>{order.orderAssignd.deliveryBoyId.name}</p>
-                                                                      }
                                                                </div>
+
+                                                               {order?.orderAssignd?.deliveryBoyId &&
+                                                                      <>
+                                                                             <div className="flex md:flex-row flex-col gap-2 border p-2 mt-2">
+                                                                                    <p className="text-sm text-gray-600">Delivery Boy info :-</p>
+                                                                                    <div className="flex items-center text-xs  gap-1">
+                                                                                           <img src="/name.gif" className="h-5 w-5" />
+                                                                                           <p className="capitalize line-clamp-1">{order?.orderAssignd?.deliveryBoyId?.name}</p>
+                                                                                    </div>
+
+                                                                                    <div className="flex items-center gap-1">
+                                                                                           <img src="/mobile.gif" className="h-5 w-5" />
+                                                                                           <p className="text-xs ">{order?.orderAssignd?.deliveryBoyId?.mobile}</p>
+
+                                                                                           <a href={`tel:${order?.orderAssignd?.deliveryBoyId?.mobil}`}
+                                                                                                  className="text-xs rounded border p-1 px-2 border-green-500"
+                                                                                           >Call</a>
+                                                                                    </div>
+                                                                             </div>
+
+                                                                             <Link href={`/user/getTrackOrder/${order?._id}`} className="flex items-center p-1.5 gap-1.5 hover:underline">
+                                                                                    <CiDeliveryTruck size={20} 
+                                                                                    className="text-yellow-600"/>
+                                                                                    <p className="text-xs font-semibold text-green-500 ">Track Your Order</p>
+                                                                             </Link>
+                                                                      </>
+                                                               }
                                                         </div>
 
                                                         <button
                                                                onClick={() =>
                                                                       setOpenOrderId((prevId) => (prevId === order._id ? null : order._id))
                                                                }
-                                                               className="absolute right-8 top-8 text-blue-500 cursor-pointer"
+                                                               className="absolute right-8 md:top-30 top-30 text-blue-500 cursor-pointer"
                                                         >
                                                                {isOpen ? <IoChevronUpSharp size={22} /> : <IoChevronDownSharp size={22} />}
                                                         </button>
@@ -154,11 +178,11 @@ const Page = () => {
                                                         <AnimatePresence>
                                                                {isOpen && (
                                                                       <motion.div
-                                                                             initial={{ height: 0, opacity: 0, y: 50 }}
-                                                                             animate={{ height: "auto", opacity: 1, y: 0 }}
-                                                                             exit={{ height: 0, opacity: 0, y: 50 }}
+                                                                             initial={{ opacity: 0, scaleY: 0 }}
+                                                                             animate={{ opacity: 1, scaleY: 1 }}
+                                                                             exit={{ opacity: 0, scaleY: 0 }}
                                                                              transition={{ duration: 0.5, ease: "easeInOut" }}
-                                                                             className="border p-2 rounded space-y-3 shadow scrollbar-hide mt-3"
+                                                                             className="origin-top overflow-hidden border p-2 rounded space-y-3 shadow mt-3"
                                                                       >
 
                                                                              {order.items?.map((item, idx) => (
