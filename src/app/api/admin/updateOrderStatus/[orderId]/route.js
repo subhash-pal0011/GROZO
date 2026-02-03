@@ -32,7 +32,7 @@ export async function POST(req, { params }) {
 
 
               // order.deliveryBoyId mtlb koi bhi order ko koi deliver accsept nhi kiya o deliveryBy
-              if (status === "confirmed" && !order.deliveryBoyId) {
+              if (status === "delivered" && !order.deliveryBoyId) {
 
                      const { latitude, longitude } = order.address;
 
@@ -59,6 +59,13 @@ export async function POST(req, { params }) {
                             },
                      });
 
+                     if (nearbyDeliveryBoys.length === 0) {
+                            return NextResponse.json({
+                                   success: true,
+                                   message: "Order confirmed but no delivery boy available",
+                            });
+                     }
+
                      for (const boy of nearbyDeliveryBoys) {
 
                             const assignment = await DeliveryAssignment.create({
@@ -71,7 +78,7 @@ export async function POST(req, { params }) {
 
 
                             const populatedAssignment = await DeliveryAssignment.findById(assignment._id)
-                            .populate("orderId");
+                                   .populate("orderId");
                             await eventHandlerForIndexJs({
                                    event: "new-order-assign",
                                    data: populatedAssignment,
