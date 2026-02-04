@@ -83,7 +83,7 @@ const userSchema = new mongoose.Schema(
                      },
                      coordinates: { // ISKE UNDER HI  LETITUDE , LONGITUDE RHATA HGII
                             type: [Number], // [longitude, latitude]
-                            default: [0, 1], // 0,0 MTLB LETITUDE , LONGITUDE 
+                            default: [0, 1], 
                      },
               },
               
