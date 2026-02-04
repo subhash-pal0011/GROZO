@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Polygon } from "react-leaflet";
@@ -19,7 +20,7 @@ const deliveryBoyIcon = L.divIcon({
        html: renderToStaticMarkup(
               <MdDeliveryDining size={30} color="red" />
        ),
-       className: "",            // 🧠 important (default CSS avoid)
+       className: "",            // 🧠 important (default CSS avoid)  auto fill
        iconSize: [30, 30],
        iconAnchor: [15, 15],
 });
@@ -29,20 +30,27 @@ const limeOptions = { color: "lime", weight: 2 };
 const purpleOptions = { color: "purple", fillColor: "purple", fillOpacity: 0.2 };
 
 const UpdateLocationForDeliveryBoy = ({ orderLocation, deliveryBoyLocation }) => {
+       if (!orderLocation || !deliveryBoyIcon) return null;
 
-       const polyline = deliveryBoyLocation ? [[orderLocation.latitude, orderLocation.longitude], [deliveryBoyLocation.latitude, deliveryBoyLocation.longitude]] : null;
+       const orderLatLng = [orderLocation.latitude, orderLocation.longitude];
 
-       const polygon = [
+       // AGR                 deliveryBoyLocation &&(HII) TBHI AGE BADHO.
+       const deliveryLatLng = deliveryBoyLocation && deliveryBoyLocation.latitude && deliveryBoyLocation.longitude ? [deliveryBoyLocation.latitude, deliveryBoyLocation.longitude] : null;
+
+       const center = deliveryLatLng || orderLatLng;
+
+
+       const polylinePositions = deliveryLatLng ? [orderLatLng, deliveryLatLng] : null;
+              
+              
+
+       const polygonPositions = [
               //  4 TRF 100M RHNA CHHIYE AREYA GIRA HUA
               [orderLocation.latitude + 0.001, orderLocation.longitude + 0.001],
               [orderLocation.latitude + 0.001, orderLocation.longitude - 0.001],
               [orderLocation.latitude - 0.001, orderLocation.longitude - 0.001],
               [orderLocation.latitude - 0.001, orderLocation.longitude + 0.001],
        ];
-
-       if (!orderLocation) return null;
-
-       const center = deliveryBoyLocation ? [deliveryBoyLocation.latitude, deliveryBoyLocation.longitude] : [orderLocation.latitude, orderLocation.longitude];
 
 
        return (
@@ -59,20 +67,30 @@ const UpdateLocationForDeliveryBoy = ({ orderLocation, deliveryBoyLocation }) =>
                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
 
-                            <Marker position={[orderLocation.latitude, orderLocation.longitude]} icon={house}>
+                            <Marker position={orderLatLng} icon={house}>
                                    <Popup>Order Location 📌</Popup>
                             </Marker>
 
-                            {deliveryBoyLocation && <Marker position={[deliveryBoyLocation.latitude, deliveryBoyLocation.longitude]} icon={deliveryBoyIcon}>
-                                   <Popup>Your Location 📌</Popup>
-                            </Marker>}
+                            {deliveryLatLng && (
+                                   <Marker position={deliveryLatLng} icon={deliveryBoyIcon}>
+                                          <Popup>Delivery Boy 📍</Popup>
+                                   </Marker>
+                            )}
+
 
                             {/* POLYLINE DO CHIJO KE BICHH MEA LINE DIKHNI RHTI HII TO USE KRTE HII */}
-                            <Polyline pathOptions={limeOptions} positions={polyline} />
+                            {polylinePositions && (
+                                   <Polyline
+                                          pathOptions={limeOptions}
+                                          positions={polylinePositions}
+                                   />
+                            )}
 
                             {/* ISKA USE Polygon ka use hota hai jab tu map par kisi area / boundary / zone ko dikhana chahta hai */}
-                            <Polygon pathOptions={purpleOptions} positions={polygon} />
-
+                            <Polygon
+                                   pathOptions={purpleOptions}
+                                   positions={polygonPositions}
+                            />
                      </MapContainer>
               </div>
        );
