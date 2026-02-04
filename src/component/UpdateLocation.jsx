@@ -10,8 +10,8 @@ const UpdateLocation = ({ userId }) => {
        const socket = getSocket()
 
        useEffect(() => {
-
-              if (!userId || !navigator.geolocation) return
+              if (!userId) return;
+              if (!navigator.geolocation) return
 
               //📌 watchPosition iska use Jab user move karta rahe aur hume continuously live location chahiye ho. jese delivery boy etc.
               const watcher = navigator.geolocation.watchPosition(
