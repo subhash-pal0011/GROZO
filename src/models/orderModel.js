@@ -56,7 +56,7 @@ const orderSchema = new mongoose.Schema(
                      default: "confirmed",
               },
 
-              orderAssignd:{ // AGR USER KO EK BAR NOTIFICATION CHALA GYA IS ORDER KE LIYE DUBARA ISI DELIVERY BOY KO NA JAKR KISI AUR KO JANE KE LIYE  
+              orderAssignd:{ // orderAssignd isliye add kiya gaya hai taaki ek order sirf ek hi delivery boy ko assign ho, duplicate notifications aur race condition se bacha ja sake. 
                      type:mongoose.Schema.Types.ObjectId,
                      ref:"DeliveryAssignment",
                      default:null
