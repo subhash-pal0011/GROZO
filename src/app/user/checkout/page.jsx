@@ -26,8 +26,6 @@ const Page = () => {
        const { userData } = useSelector((state) => state.user);
 
 
-
-
        //2-CONTAINER
        const [selectPaymentMethod, setSelectPaymentMethod] = useState("online")
        const { grandTotal, cartData, totalPrice, deliveryCharge, platformCharge, discount } = useSelector((state) => state.card);
