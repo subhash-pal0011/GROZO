@@ -9,6 +9,8 @@ import { getSocket } from "@/lib/socket";
 import { CiDeliveryTruck } from "react-icons/ci";
 import Link from "next/link";
 
+
+
 const Page = () => {
        const router = useRouter();
        const [loader, setLoader] = useState(true);
@@ -157,7 +159,7 @@ const Page = () => {
                                                                                     </div>
                                                                              </div>
 
-                                                                             <Link href={`/user/getTrackOrder/${order?._id}`} className="flex items-center p-1.5 gap-1.5 hover:underline">
+                                                                             <Link href={`/user/trackOrder/${order?._id}`} className="flex items-center p-1.5 gap-1.5 hover:underline">
                                                                                     <CiDeliveryTruck size={20} 
                                                                                     className="text-yellow-600"/>
                                                                                     <p className="text-xs font-semibold text-green-500 ">Track Your Order</p>
