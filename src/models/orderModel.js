@@ -111,6 +111,14 @@ const orderSchema = new mongoose.Schema(
                             required: true,
                      },
               },
+
+              deliveryVerification:{
+                     type:Boolean,
+                     default:false
+              },
+              deliveredAt:{
+                     type:Date
+              }
        },
        { timestamps: true }
 );
