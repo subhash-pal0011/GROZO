@@ -4,7 +4,7 @@ const messageSchema = new mongoose.Schema(
        {
               chatId: {
                      type: mongoose.Schema.Types.ObjectId,
-                     ref: "ChatModel",
+                     ref: "Order", //  CHAT ROOM YAHA SE LE LENGE
                      required: true,
               },
 
@@ -19,9 +19,17 @@ const messageSchema = new mongoose.Schema(
                      required: true,
                      trim: true,
               },
-              time:String
+
+              time: {
+                     type: String,
+              },
        },
        { timestamps: true }
 );
-const MessageModel = mongoose.models.MessageModel || mongoose.model("MessageModel", messageSchema);
+
+const MessageModel =
+       mongoose.models.MessageModel ||
+       mongoose.model("MessageModel", messageSchema);
+
 export default MessageModel;
+
