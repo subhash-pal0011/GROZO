@@ -1,10 +1,14 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { IoMdArrowBack } from "react-icons/io";
 import { CiDeliveryTruck, CiLocationOn } from "react-icons/ci";
+import { IoSend } from "react-icons/io5";
+import { useForm } from "react-hook-form";
+
 import dynamic from "next/dynamic";
+import { getSocket } from "@/lib/socket";
 const UpdateLocationForDeliveryBoy = dynamic(
        () => import("@/component/UpdateLocationForDeliveryBoy"),
        { ssr: false }
@@ -14,10 +18,78 @@ const UpdateLocationForDeliveryBoy = dynamic(
 const Page = () => {
        const router = useRouter();
        const { orderId } = useParams();
-
        const [order, setOrder] = useState(null);
        const [userLocation, setUserLocation] = useState(null);
        const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null);
+       const [messages, setMessages] = useState([]);
+       const scrollRef = useRef(null)
+
+
+       const socket = getSocket()
+       const {
+              register,
+              handleSubmit,
+              reset,
+       } = useForm();
+
+       const userId = order?.user;
+
+
+       const onSubmit = (data) => {
+              const msg = data.message?.trim();
+              if (!msg) return;
+
+              const messageObj = {
+                     chatId: orderId,
+                     senderId: userId,
+                     message: msg,
+                     time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              };
+
+              socket.emit("send-message", messageObj);
+              reset();
+       };
+
+
+
+       useEffect(() => {
+              socket.emit("join-room-chat", orderId);
+
+              socket.on("send-message", (message) => {
+                     setMessages((prev) => [...prev, message]);
+              });
+
+              return () => socket.off("send-message");
+       }, [orderId]);
+
+
+       useEffect(() => {
+              const getAllMessage = async () => {
+                     try {
+                            const res = await axios.get(`/api/chat/getMsj?chatId=${orderId}`);
+
+                            if (res.data.success) {
+                                   setMessages(res.data.data);
+                            }
+                     } catch (error) {
+                            console.log("get message error:", error);
+                     }
+              };
+
+              if (orderId) getAllMessage(); // orderId exist kare tabhi call
+       }, [orderId]);
+
+
+       useEffect(() => {
+              if (!scrollRef.current) return;
+
+              scrollRef.current.scrollTo({
+                     top: scrollRef.current.scrollHeight,
+                     behavior: "smooth",
+              });
+       }, [messages]);
+
+
 
        useEffect(() => {
               if (!orderId) return;
@@ -70,7 +142,7 @@ const Page = () => {
                      </div>
 
 
-                     <div className="max-w-2xl mx-auto px-4">
+                     <div className="max-w-2xl mx-auto px-4 space-y-5">
                             <div className="bg-white rounded shadow-lg p-5 space-y-5">
 
                                    <div>
@@ -119,6 +191,60 @@ const Page = () => {
                                           deliveryBoyLocation={deliveryBoyLocation}
                                    />
                             </div>
+
+
+                            <div className="flex-1 h-80 overflow-y-auto scrollbar-hide p-3 space-y-2 bg-gray-50 rounded-xl" ref={scrollRef}>
+                                   {messages.length === 0 && (
+                                          <p className="text-center text-sm text-gray-400 mt-4">
+                                                 No messages yet
+                                          </p>
+                                   )}
+
+                                   {messages.map((msg, index) => {
+                                          const isMe = msg.senderId === userId;
+
+                                          return (
+                                                 <div
+                                                        key={index}
+                                                        className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+                                                 >
+                                                        <div
+                                                               className={`px-3 py-2 rounded-xl shadow text-sm max-w-[45%] ${isMe
+                                                                      ? "bg-green-500 text-white"
+                                                                      : "bg-white text-gray-800"
+                                                                      }`}
+                                                        >
+                                                               {msg.message}
+                                                               <p
+                                                                      className={`text-[10px] mt-1 text-right ${isMe ? "text-green-100" : "text-gray-400"
+                                                                             }`}
+                                                               >
+                                                                      {msg.time}
+                                                               </p>
+                                                        </div>
+                                                 </div>
+                                          );
+                                   })}
+                            </div>
+
+                            <form
+                                   onSubmit={handleSubmit(onSubmit)}
+                                   className="p-2 border-t flex items-center gap-2"
+                            >
+                                   <input
+                                          type="text"
+                                          placeholder="Type message..."
+                                          className="flex-1 px-4 py-2 rounded-full border text-sm focus:outline-none focus:ring-1 focus:ring-green-400 text-gray-500"
+                                          {...register("message")}
+                                   />
+
+                                   <button
+                                          type="submit"
+                                          className="p-1 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 cursor-pointer"
+                                   >
+                                          <IoSend size={15} />
+                                   </button>
+                            </form>
                      </div>
               </div>
        );
