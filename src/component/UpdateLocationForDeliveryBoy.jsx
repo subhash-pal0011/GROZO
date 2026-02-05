@@ -54,13 +54,13 @@ const UpdateLocationForDeliveryBoy = ({ orderLocation, deliveryBoyLocation }) =>
 
 
        return (
-              <div className="p-2">
                      <MapContainer
                             key={center.join(",")}
                             center={center}
                             zoom={15}
                             scrollWheelZoom={false}
-                            className="h-120 w-full rounded"
+                            className="h-80 md:h-140 rounded-xl"
+
                      >
                             <TileLayer
                                    attribution="&copy; OpenStreetMap contributors"
@@ -92,7 +92,6 @@ const UpdateLocationForDeliveryBoy = ({ orderLocation, deliveryBoyLocation }) =>
                                    positions={polygonPositions}
                             />
                      </MapContainer>
-              </div>
        );
 };
 
