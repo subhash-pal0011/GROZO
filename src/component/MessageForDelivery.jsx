@@ -74,11 +74,9 @@ const MessageForDelivery = ({ orderId, deliveryBoyId }) => {
        }, [orderId]);
 
 
-
-
-
        return (
-              <div className="w-full md:h-150 h-80 bg-white rounded-2xl shadow-xl flex flex-col">
+              <div className="w-full md:h-150 h-80 rounded-2xl shadow-xl flex flex-col">
+
 
                      {/* MESSAGES */}
                      <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-hide p-3 space-y-2 bg-gray-50 rounded-xl">
@@ -87,6 +85,8 @@ const MessageForDelivery = ({ orderId, deliveryBoyId }) => {
                                           No messages yet
                                    </p>
                             )}
+
+
 
                             {messages.map((msg, index) => {
                                    const isMe = msg.senderId === deliveryBoyId;
