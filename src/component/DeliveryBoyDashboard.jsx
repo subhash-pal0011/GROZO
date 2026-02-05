@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import dynamic from "next/dynamic";
+import MessageForDelivery from "./MessageForDelivery";
 const UpdateLocationForDeliveryBoy = dynamic(
   () => import("./UpdateLocationForDeliveryBoy"),
   { ssr: false }
@@ -17,9 +18,12 @@ const DeliveryBoyDashboard = () => {
   const [activeOrder, setActiveOrder] = useState(null);
   const [orderLocation, setOrderLocation] = useState(null);
   const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null)
-  const session = useSession()
-  const userId = session?.user?.id
-  const socket = getSocket()
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  // const userId = session?.user?.id
+  console.log(userId)
+
 
 
   useEffect(() => {
@@ -118,16 +122,34 @@ const DeliveryBoyDashboard = () => {
 
   if (activeOrder && orderLocation) {
     return (
-      <div className="min-h-screen  bg-linear-to-r from-green-100 via-green-100 to-orange-100 text-gray-800">
+      <div className="min-h-screen p-2 bg-linear-to-r from-green-100 via-green-100 to-orange-100">
+        <div className="flex flex-col md:flex-row gap-4 items-stretch">
 
-        <div className="mx-auto max-w-xl p-5">
-          <div className="text-center">
-            <h1 className="text-green-500 text-xl font-semibold">Active Order</h1>
+          {/* MAP */}
+          <div className="w-full md:w-1/2">
+            <div className="p-2 shadow-2xl bg-white rounded-xl ">
+              <h1 className="text-center text-green-500 text-lg font-semibold mb-2">
+                Active Order
+              </h1>
+
+              <UpdateLocationForDeliveryBoy
+                orderLocation={orderLocation}
+                deliveryBoyLocation={deliveryBoyLocation}
+              />
+            </div>
+          </div>
+
+          {/* CHAT */}
+          <div className="w-full md:w-1/2">
+            <MessageForDelivery
+              orderId={activeOrder?.orderId?._id}
+              deliveryBoyId={userId}
+            />
           </div>
 
         </div>
-        <UpdateLocationForDeliveryBoy orderLocation={orderLocation} deliveryBoyLocation={deliveryBoyLocation} />
       </div>
+
     );
   }
 
