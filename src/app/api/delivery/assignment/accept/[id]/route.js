@@ -14,12 +14,15 @@ export async function GET(req, { params }) {
 
               if (!deliveryBoyId) {
                      return NextResponse.json(
-                            { success: false, message: "Unauthorized" },
+                            { success: false, message: "Delivery Boy Unauthorized" },
                             { status: 401 }
                      );
               }
 
-              const assignment = await DeliveryAssignment.findById(id);
+              // const assignment = await DeliveryAssignment.findById(id);
+              const assignment = await DeliveryAssignment.findById(id)
+                     .populate("orderId"); // 🔥 ADD THIS
+
               if (!assignment) {
                      return NextResponse.json(
                             { success: false, message: "Assignment not found" },
@@ -92,16 +95,6 @@ export async function GET(req, { params }) {
               order.orderStatus = "out_for_delivery"; // ORDER STATUS MEA BATA DO OUT FOR DELIVERY MTLB ORDER LEKR NIKL GYA HII.
               await order.save();
 
-              // 🔥 Realtime updates
-              // await eventHandlerForIndexJs({
-              //        event: "order-status-updated",
-              //        data: { orderId: order._id, status: order.orderStatus },
-              // });
-
-              // await eventHandlerForIndexJs({
-              //        event: "order-accepted",
-              //        data: { orderId: order._id, deliveryBoyId },
-              // });
 
               return NextResponse.json({
                      success: true,
@@ -116,4 +109,7 @@ export async function GET(req, { params }) {
               );
        }
 }
+
+
+
 
