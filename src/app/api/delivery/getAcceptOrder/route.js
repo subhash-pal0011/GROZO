@@ -31,6 +31,7 @@ export async function GET(req) {
                      })
                      .lean(); // read-only hai, fast
 
+
               if (!assignment) {
                      return Response.json({
                             success: true,
@@ -43,6 +44,8 @@ export async function GET(req) {
                      success: true,
                      data: assignment,
               });
+
+
 
        } catch (error) {
               console.error("Delivery assignment GET error:", error);
