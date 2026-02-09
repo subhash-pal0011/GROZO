@@ -48,8 +48,9 @@ const orderSchema = new mongoose.Schema(
               isPayed: {
                      type: Boolean,
                      default: false
-              }
-              ,
+              },
+
+       
               orderStatus: {
                      type: String,
                      enum: ["placed", "confirmed", "out_for_delivery" , "delivered", "cancelled"],
