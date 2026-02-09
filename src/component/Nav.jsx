@@ -138,7 +138,7 @@ const Nav = ({ user }) => {
                                                  Add Grocery <IoIosAddCircleOutline size={13} />
                                           </Link>
                                           <Link
-                                                 href="#"
+                                                 href="/admin/viewCrocery"
                                                  className="cursor-pointer border p-2 rounded-3xl bg-white text-orange-300 text-xs font-semibold flex items-center gap-1"
                                           >
                                                  View Grocery <FaStreetView />
@@ -280,7 +280,7 @@ const Nav = ({ user }) => {
 
                                                                <motion.div whileTap={{ scale: 0.93 }}>
                                                                       <Link
-                                                                             href="#"
+                                                                             href="/admin/viewCrocery"
                                                                              className="cursor-pointer border p-2 rounded-3xl bg-white text-orange-300 text-xs font-semibold flex items-center gap-1"
                                                                       >
                                                                              View Grocery <FaStreetView />
