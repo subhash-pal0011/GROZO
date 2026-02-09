@@ -46,6 +46,12 @@ export async function POST(req) {
               order.deliveryVerification = true;
               order.orderStatus = "delivered";
               order.deliveredAt = new Date();
+
+
+              if (order.paymentMethod === "cod") {
+                     order.isPayed = true;
+                     order.paymentStatus = "paid";
+              }
               await order.save();
 
               await DeliveryAssignment.findOneAndUpdate(
