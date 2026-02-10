@@ -13,12 +13,20 @@ const Page = () => {
        const [getOrder, setGetOrder] = useState([]);
        const [editForm, setEditForm] = useState(false);
        const [selectedItem, setSelectedItem] = useState(null);
+       const [search, setSearch] = useState("")
+
        const {
               register,
               handleSubmit,
               reset,
               formState: { errors, isSubmitting },
        } = useForm();
+
+       const filteredGrocery = getOrder.filter((item) =>
+              `${item.name} ${item.unit}` // HUM UNIT KE HISB SE BHI SEARCH KR SKTE HII AUR NAME SE BHAI
+              .toLowerCase()
+              .includes(search.toLowerCase())
+       );
 
 
        useEffect(() => {
@@ -117,11 +125,12 @@ const Page = () => {
                             className="max-w-lg mx-auto bg-white rounded-xl shadow p-3 mb-6"
                      >
                             <form
-                                   onSubmit={(e) => e.preventDefault()}
                                    className="flex items-center gap-3"
                             >
                                    <img src="/surch.gif" alt="search" className="h-6 w-6" />
                                    <input
+                                          value={search}
+                                          onChange={(e) => setSearch(e.target.value)}
                                           type="text"
                                           placeholder="Grocery Search..."
                                           className="w-full outline-none text-sm font-medium placeholder-gray-400"
@@ -132,7 +141,7 @@ const Page = () => {
 
                      {/* product */}
                      <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-                            {getOrder.map((item, index) => (
+                            {filteredGrocery.map((item, index) => (
                                    <motion.div
                                           key={item._id}
                                           whileHover={{ scale: 1.02 }}
