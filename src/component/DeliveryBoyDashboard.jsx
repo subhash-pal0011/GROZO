@@ -246,7 +246,10 @@ const DeliveryBoyDashboard = () => {
     <div className="min-h-screen w-full bg-linear-to-r from-green-100 via-green-100 to-orange-100 text-gray-800 flex flex-col items-center justify-center md:p-5 p-2">
 
       {data.length === 0 ? (
-        <p>No assignments</p>
+        <div className="flex md:flex-row flex-col items-center">
+          <img src="/computer.gif" className="h-20 w-20" />
+          <p className="font-bold text-xl text-gray-500 capitalize line-clamp-1">No assignments</p>
+        </div>
       ) : (
         data.map((item) => (
           <div
