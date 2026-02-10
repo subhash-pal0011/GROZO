@@ -9,6 +9,7 @@ import UserDashboard from "@/component/UserDashboard";
 import dbConnect from "@/connectDb/dbConnect";
 import User from "@/models/user";
 import { redirect } from "next/navigation";
+import Footer from "../component/Footer";
 
 const Home = async () => {
   await dbConnect();
@@ -24,10 +25,10 @@ const Home = async () => {
     return <PhoneNumRole />;
   }
 
-  //// STEP 2 PE YE CHALEGA
-  // if (!user.mobileVerified) {
-  //   return <PhoneNumVerify mobile={user.mobile} />;
-  // }
+  // STEP 2 PE YE CHALEGA
+  if (!user.mobileVerified) {
+    return <PhoneNumVerify mobile={user.mobile} />;
+  }
 
   // isko is error se bachne ke liye bana pada<... user={{$__: ..., $isNew: false, _doc: ...}}>
   const plainUser = JSON.parse(JSON.stringify(user))
@@ -42,6 +43,7 @@ const Home = async () => {
       ) : user?.role === "admin" ? (
         <AdminDashboard />
       ) : <DeliveryBoyDashboard />}
+      <Footer />
     </>
   );
 };
