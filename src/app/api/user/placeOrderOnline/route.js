@@ -79,8 +79,8 @@ export async function POST(req) {
                      payment_method_types: ["card"],
                      mode: "payment",
 
-                     success_url: "http://localhost:3000/user/payment-success",
-                     cancel_url: "http://localhost:3000/user/payment-failed",
+                     success_url: "https://grozo-eight.vercel.app/user/payment-success",
+                     cancel_url: "https://grozo-eight.vercel.app/payment-failed",
 
                      line_items: [
                             {
